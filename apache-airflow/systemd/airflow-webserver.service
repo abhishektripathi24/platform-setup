@@ -1,0 +1,23 @@
+[Unit]
+Description=Airflow webserver daemon
+After=network.target postgresql.service mysql.service redis.service rabbitmq-server.service
+Wants=postgresql.service mysql.service redis.service rabbitmq-server.service
+
+[Service]
+User=ec2-user
+Group=ec2-user
+Type=simple
+PermissionsStartOnly=True
+RuntimeDirectory=airflow
+RuntimeDirectoryMode=0775
+PIDFile=/run/airflow/webserver.pid
+Environment=AIRFLOW_HOME=/home/ec2-user/airflow
+ExecStart=/bin/bash -c 'source /home/ec2-user/anaconda3/bin/activate airflow && /home/ec2-user/anaconda3/envs/airflow/bin/airflow webserver --pid /run/airflow/webserver.pid'
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=on-failure
+RestartSec=5s
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

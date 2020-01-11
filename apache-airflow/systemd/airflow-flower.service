@@ -1,0 +1,22 @@
+[Unit]
+Description=Airflow celery flower daemon
+After=network.target postgresql.service mysql.service redis.service rabbitmq-server.service airflow-scheduler.service
+Wants=postgresql.service mysql.service redis.service rabbitmq-server.service
+
+[Service]
+User=ec2-user
+Group=ec2-user
+Type=simple
+PermissionsStartOnly=True
+RuntimeDirectory=airflow
+RuntimeDirectoryMode=0775
+PIDFile=/run/airflow/flower.pid
+Environment=AIRFLOW_HOME=/home/ec2-user/airflow
+ExecStart=/bin/bash -c 'source /home/ec2-user/anaconda3/bin/activate airflow && /home/ec2-user/anaconda3/envs/airflow/bin/airflow flower --pid /run/airflow/flower.pid'
+ExecReload=/bin/kill -s HUP $MAINPID
+ExecStop=/bin/kill -s TERM $MAINPID
+Restart=on-failure
+RestartSec=5s
+
+[Install]
+WantedBy=multi-user.target
