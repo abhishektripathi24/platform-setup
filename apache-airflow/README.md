@@ -1,4 +1,4 @@
-# Airflow Server Setup
+# Airflow [Cluster Setup] 
 To know more about Airflow, visit https://github.com/apache/airflow
 
 ## Overview
@@ -15,16 +15,16 @@ From the official docs -
 
 1. Prerequisites
     * Install Anaconda and gcc.
-    ```bash
-    wget https://repo.anaconda.com/archive/Anaconda3-5.3.1-Linux-x86_64.sh
-    bash Anaconda3-5.3.1-Linux-x86_64.sh
-    vim ~/.bashrc
-       > export AIRFLOW_GPL_UNIDECODE=yes
-       > export SLUGIFY_USES_TEXT_UNIDECODE=yes
-       > export AIRFLOW_HOME=~/airflow
-    source ~/.bashrc
-    sudo yum install gcc
-    ```
+        ```bash
+        wget https://repo.anaconda.com/archive/Anaconda3-5.3.1-Linux-x86_64.sh
+        bash Anaconda3-5.3.1-Linux-x86_64.sh
+        vim ~/.bashrc
+           > export AIRFLOW_GPL_UNIDECODE=yes
+           > export SLUGIFY_USES_TEXT_UNIDECODE=yes
+           > export AIRFLOW_HOME=~/airflow
+        source ~/.bashrc
+        sudo yum install gcc
+        ```
     
 2. Create a virtual environment and install dependencies
     ```bash
@@ -32,36 +32,36 @@ From the official docs -
     conda activate airflow
     ``` 
     * env.yml
-    ```yaml
-     name: airflow
-     channels:
-      - conda-forge
-      - anaconda
-     dependencies:
-      - python=3.6.7
-      - cython=0.29.1
-      - celery=4.2.1
-      - flower=0.9.2
-      - postgresql=10.5
-      - gevent=1.3.6
-      - greenlet=0.4.15
-      - pip=18.1
-      - pip:
-        - psycopg2-binary==2.7.6.1
-        - redis==2.10.6
-        - apache-airflow==1.10.1
-        - apache-airflow[async]==1.10.3
-        - apache-airflow[celery]==1.10.3
-        - apache-airflow[crypto]==1.10.3
-        - apache-airflow[jdbc]==1.10.3
-        - apache-airflow[hive]==1.10.3
-        - apache-airflow[hdfs]==1.10.3
-        - apache-airflow[ldap]==1.10.3
-        - apache-airflow[mysql]==1.10.3
-        -  apache-airflow[postgres]==1.10.3
-        - apache-airflow[s3]==1.10.3
-        - apache-airflow[redis]==1.10.3
-    ```
+        ```yaml
+         name: airflow
+         channels:
+          - conda-forge
+          - anaconda
+         dependencies:
+          - python=3.6.7
+          - cython=0.29.1
+          - celery=4.2.1
+          - flower=0.9.2
+          - postgresql=10.5
+          - gevent=1.3.6
+          - greenlet=0.4.15
+          - pip=18.1
+          - pip:
+            - psycopg2-binary==2.7.6.1
+            - redis==2.10.6
+            - apache-airflow==1.10.1
+            - apache-airflow[async]==1.10.3
+            - apache-airflow[celery]==1.10.3
+            - apache-airflow[crypto]==1.10.3
+            - apache-airflow[jdbc]==1.10.3
+            - apache-airflow[hive]==1.10.3
+            - apache-airflow[hdfs]==1.10.3
+            - apache-airflow[ldap]==1.10.3
+            - apache-airflow[mysql]==1.10.3
+            -  apache-airflow[postgres]==1.10.3
+            - apache-airflow[s3]==1.10.3
+            - apache-airflow[redis]==1.10.3
+        ```
 3. Setup Airflow master node with Celery worker
     ```bash
     export AIRFLOW_HOME=~/airflow
@@ -97,38 +97,38 @@ From the official docs -
     * Update following variable in airflow.cfg for airflow admin
         * base_url = http://my_host/myorg/airflow
     * Corresponding NGINX config
-    ```buildoutcfg
-    server {
-      listen 80;
-      server_name lab.mycompany.com;
-    
-      location /myorg/airflow/ {
-          proxy_pass http://localhost:8080;
-          proxy_set_header Host $host;
-          proxy_redirect off;
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-      }
-    }
-    ```
+        ```buildoutcfg
+        server {
+          listen 80;
+          server_name lab.mycompany.com;
+        
+          location /myorg/airflow/ {
+              proxy_pass http://localhost:8080;
+              proxy_set_header Host $host;
+              proxy_redirect off;
+              proxy_http_version 1.1;
+              proxy_set_header Upgrade $http_upgrade;
+              proxy_set_header Connection "upgrade";
+          }
+        }
+        ```
     * Update following variable in airflow.cfg for flower dashboard
         * flower_url_prefix = /myorg/flower
     * Corresponding NGINX config
-    ```buildoutcfg
-        server {
-            listen 80;
-            server_name lab.mycompany.com;
-        
-            location /myorg/flower/ {
-                rewrite ^/myorg/flower/(.*)$ /$1 break;
-                proxy_pass http://localhost:5555;
-                proxy_set_header Host $host;
-                proxy_redirect off;
-                proxy_http_version 1.1;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection "upgrade";
+        ```buildoutcfg
+            server {
+                listen 80;
+                server_name lab.mycompany.com;
+            
+                location /myorg/flower/ {
+                    rewrite ^/myorg/flower/(.*)$ /$1 break;
+                    proxy_pass http://localhost:5555;
+                    proxy_set_header Host $host;
+                    proxy_redirect off;
+                    proxy_http_version 1.1;
+                    proxy_set_header Upgrade $http_upgrade;
+                    proxy_set_header Connection "upgrade";
+                }
             }
-        }
-    ```
+        ```
     

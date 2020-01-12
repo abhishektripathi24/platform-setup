@@ -1,4 +1,4 @@
-# Timescale Server Setup
+# Timescale [Master-Slave Setup]
 To know more about Timescale, visit https://www.timescale.com/
 
 ## Overview
@@ -90,7 +90,7 @@ From the official docs -
     crontab -e
     30 05 1-31/3 * * find /data/postgresql/postgresql/10/main/pg_wal_archive -mtime +3 -delete
     ```
-2. Run timescaledb tune to tune your servers as per resources available (run this command on both master as well as replicas, then restart postgresql)
+2. Run [timescaledb-tune](https://github.com/timescale/timescaledb-tune) to tune your servers as per resources available (run this command on both master as well as replicas, then restart postgresql)
     ```bash
     timescaledb-tune
     ```
