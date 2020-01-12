@@ -1,4 +1,6 @@
 # Redis [Sentinel Setup]
+![](images/redis-logo.png)
+
 To know more about Redis Sentinel, visit https://redis.io/topics/sentinel
 
 ## Overview

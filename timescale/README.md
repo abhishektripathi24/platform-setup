@@ -1,4 +1,6 @@
 # Timescale [Master-Slave Setup]
+![](images/timescale-logo.png)
+
 To know more about Timescale, visit https://www.timescale.com/
 
 ## Overview

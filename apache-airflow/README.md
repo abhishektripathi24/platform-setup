@@ -1,4 +1,6 @@
-# Airflow [Cluster Setup] 
+# Airflow [Cluster Setup]
+![](images/airflow-logo.png)
+ 
 To know more about Airflow, visit https://github.com/apache/airflow
 
 ## Overview
