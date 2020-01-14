@@ -15,7 +15,8 @@ From the official docs -
 1. Installation on ubuntu 18.04.3 LTS
     ```bash
     sudo apt update
-    sudo apt install gcc 
+    sudo apt install gcc
+    sudo apt install make
     sudo apt-get install -y tcl
     wget http://download.redis.io/releases/redis-5.0.7.tar.gz
     tar xzf redis-5.0.7.tar.gz
@@ -49,9 +50,10 @@ From the official docs -
         * Comment the line `bind 127.0.0.1` if you want to allow clients to connect redis from all network interfaces and not restricted to loopback interface.  
         * Disable auth by setting `protected-mode no` if you don't want authentication.
         * Set `supervised systemd`, if you want to manage redis via systemd. The systemd files for redis-server and redis-sentinel can be found under redis/systemd in this repo.
-        * Set `logfile "/var/log/redis/redis-server.log"`
+        * Set `logfile "/var/log/redis/redis-server.log"`.
         * Set `stop-writes-on-bgsave-error no` to allow accept writes even if BGSAVE failed.
-        * Set `dir "/data"` to allow saving data `dump.rdb` file at a volume different than root.
+        * Set `dir "/data"` to allow saving data files (`dump.rdb`, `appendonly.aof`) at a volume different than root.
+        * Set `appendonly yes` to allow append only file persistence. 
         * Disable critical commands. (Please add these after testing the setup. Otherwise you won't be able to issue these commands.)
             ```
             rename-command FLUSHDB ""
@@ -63,18 +65,19 @@ From the official docs -
         * Set `replicaof  <masterip> <masterport>`.
 
 4. Configure Redis-Sentinel: update sentinel.conf
-    ```bash
-    sentinel monitor mymaster <ip-address-of-initial-master-redis-server> 6379 2
-    sentinel down-after-milliseconds mymaster 5000
-    sentinel parallel-syncs mymaster 1
-    sentinel failover-timeout mymaster 10000
-    sentinel deny-scripts-reconfig yes
-    ```
-    > Note: Please do not copy sentinel.conf to other servers if you have started sentinel process even once. 
-    
-    > Reason: Upon starting the sentinel process, it writes a unique id for itself in the sentinel.conf (sentinel myid 1e05acbfea43ecc0ff0c976ede504805a6342db3). And if you replicate (copy-paste) this sentinel.conf to other sentinel servers, all of them will behave as if you have a single sentinel node instead of 3 nodes in the cluster, as all of them will have the same id.
-    
-    > Moral of the story: Each sentinel node should have unique id in the sentinel cluster and this id is generated automatically by sentinel process itself.
+    * Set `logfile "/var/log/redis/redis-sentinel.log"`.
+    * Set following for a 3 node sentinel setup on each sentinel node -
+        ```bash
+        sentinel monitor mymaster <ip-address-of-initial-master-redis-server> 6379 2
+        sentinel down-after-milliseconds mymaster 5000
+        sentinel parallel-syncs mymaster 1
+        sentinel failover-timeout mymaster 10000
+        ```
+        > Note: Please do not copy sentinel.conf to other servers if you have started sentinel process even once. 
+        
+        > Reason: Upon starting the sentinel process, it writes a unique id for itself in the sentinel.conf (sentinel myid 1e05acbfea43ecc0ff0c976ede504805a6342db3). And if you replicate (copy-paste) this sentinel.conf to other sentinel servers, all of them will behave as if you have a single sentinel node instead of 3 nodes in the cluster, as all of them will have the same id.
+        
+        > Moral of the story: Each sentinel node should have unique id in the sentinel cluster and this id is generated automatically by sentinel process itself.
 
 5. Testing the cluster setup
     * Verify that sentinels see each other. If, for ex, you are setting up 3 sentinels, the property `num-other-sentinels` should be `2` upon starting all the sentinel nodes.
