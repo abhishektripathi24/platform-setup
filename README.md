@@ -6,5 +6,6 @@ Refer individual packages for detailed readme
 1. [Apache Airflow](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-airflow)
 2. [Redis](https://github.com/abhishektripathi24/platform-setup/tree/master/redis) 
 3. [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale)
+4. [Postgres](https://github.com/abhishektripathi24/platform-setup/tree/master/postgres)
 
 ![](logos.png)
