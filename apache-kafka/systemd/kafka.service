@@ -1,19 +1,20 @@
 [Unit]
-Description=Zookeeper Daemon
-Documentation=http://zookeeper.apache.org
+Description=Kafka Broker
+Documentation=https://kafka.apache.org/documentation/
 Requires=network.target
-After=network.target
+After=network.target zookeeper.service
 
 [Service]
-Type=forking
-User=zk
-Group=zk
+Type=simple
+User=kafka
+Group=kafka
 Environment=JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
-ExecStart=/opt/zookeeper/bin/zkServer.sh start /opt/zookeeper/conf/zoo.cfg
-ExecStop=/opt/zookeeper/bin/zkServer.sh stop /opt/zookeeper/conf/zoo.cfg
-ExecReload=/opt/zookeeper/bin/zkServer.sh restart /opt/zookeeper/conf/zoo.cfg
-StandardOutput=file:/opt/zookeeper/logs/zkServer.log
-StandardError=file:/opt/zookeeper/logs/zkServer.log
+Environment=KAFKA_HEAP_OPTS="-Xms2g -Xmx2g"
+Environment=LOG_DIR=/opt/kafka/logs
+ExecStart=/opt/kafka/bin/kafka-server-start.sh /opt/kafka/config/server.properties
+ExecStop=/opt/kafka/bin/kafka-server-stop.sh
+StandardOutput=file:/opt/kafka/logs/kafka-systemd-server.log
+StandardError=file:/opt/kafka/logs/kafka-systemd-server.log
 Restart=on-failure
 
 [Install]
