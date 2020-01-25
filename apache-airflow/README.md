@@ -97,7 +97,9 @@ From the official docs -
         
 6. Reverse Proxy (NGINX config)
     * Update following variable in airflow.cfg for airflow admin
-        * base_url = http://my_host/myorg/airflow
+        ```
+        base_url = http://my_host/myorg/airflow
+        ```
     * Corresponding NGINX config
         ```buildoutcfg
         server {
@@ -115,7 +117,9 @@ From the official docs -
         }
         ```
     * Update following variable in airflow.cfg for flower dashboard
-        * flower_url_prefix = /myorg/flower
+        ```
+        flower_url_prefix = /myorg/flower
+        ```
     * Corresponding NGINX config
         ```buildoutcfg
             server {
@@ -133,4 +137,4 @@ From the official docs -
                 }
             }
         ```
-    
+7. If you linux distro supports systemd, you can supervise these processes under it. The corresponding systemd service files are present in this repo at [this](systemd) location. 

@@ -67,5 +67,5 @@ From the official docs -
     echo "ruok" | nc localhost 2181
     > imok
     ```
-    
+7. If you linux distro supports systemd, you can supervise zookeeper process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 ###### NOTE: You should always keep your data on an externally mounted volume instead of the root volume if you are running the setup on cloud. This is to ensure that your data stays intact in case the VM become unresponsive. So consider you have mounted your external volume on /data, then update dataDir in zoo.cfg as follows: dataDir=/data/zookeeper 
