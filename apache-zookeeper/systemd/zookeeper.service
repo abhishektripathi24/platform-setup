@@ -1,0 +1,20 @@
+[Unit]
+Description=Zookeeper Daemon
+Documentation=http://zookeeper.apache.org
+Requires=network.target
+After=network.target
+
+[Service]
+Type=forking
+User=zk
+Group=zk
+Environment=JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+ExecStart=/opt/zookeeper/bin/zkServer.sh start /opt/zookeeper/conf/zoo.cfg
+ExecStop=/opt/zookeeper/bin/zkServer.sh stop /opt/zookeeper/conf/zoo.cfg
+ExecReload=/opt/zookeeper/bin/zkServer.sh restart /opt/zookeeper/conf/zoo.cfg
+StandardOutput=file:/opt/zookeeper/logs/zkServer.log
+StandardError=file:/opt/zookeeper/logs/zkServer.log
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
