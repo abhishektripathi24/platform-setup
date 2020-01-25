@@ -1,5 +1,5 @@
 # Airflow [Cluster Setup]
-![](images/airflow-logo.png)
+<img src="https://github.com/abhishektripathi24/platform-setup/blob/master/apache-airflow/images/airflow-logo.png" width="600" height="250"/>
  
 To know more about Airflow, visit https://github.com/apache/airflow
 

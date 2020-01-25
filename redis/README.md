@@ -1,5 +1,5 @@
 # Redis [Sentinel Setup]
-![](images/redis-logo.png)
+<img src="https://github.com/abhishektripathi24/platform-setup/blob/master/redis/images/redis-logo.png" width="600" height="200"/>
 
 To know more about Redis Sentinel, visit https://redis.io/topics/sentinel
 
