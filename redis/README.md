@@ -116,6 +116,6 @@ From the official docs -
                 --target-bucket <s3-bucket-name>
             ```
 
-7. Other useful references
-    * [What redis deployment do you need?](https://blog.octo.com/what-redis-deployment-do-you-need/) 
-    * [A medium blog may be?](https://medium.com/@amila922/redis-sentinel-high-availability-everything-you-need-to-know-from-dev-to-prod-complete-guide-deb198e70ea6)
+## References
+* [What redis deployment do you need?](https://blog.octo.com/what-redis-deployment-do-you-need/) 
+* [A medium blog may be?](https://medium.com/@amila922/redis-sentinel-high-availability-everything-you-need-to-know-from-dev-to-prod-complete-guide-deb198e70ea6)
