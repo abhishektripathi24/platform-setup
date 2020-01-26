@@ -1,0 +1,18 @@
+[Unit]
+Description=Schema Registry
+Documentation=https://docs.confluent.io/current/connect/index.html
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=sr
+Group=sr
+ExecStart=/opt/confluent/bin/schema-registry-start /opt/confluent/etc/schema-registry/schema-registry.properties
+ExecStop=/opt/confluent/bin/schema-registry-stop
+StandardOutput=null
+StandardError=null
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
