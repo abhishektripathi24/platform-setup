@@ -1,0 +1,20 @@
+[Unit]
+Description=Kafka Connect Worker
+Documentation=https://docs.confluent.io/current/connect/index.html
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+User=kc
+Group=kc
+Environment=JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+Environment=KAFKA_HEAP_OPTS="-Xms2g -Xmx2g"
+Environment=EXTRA_ARGS="-Xms2g -Xmx2g"
+ExecStart=/opt/confluent/bin/connect-distributed /opt/confluent/etc/kafka/connect-distributed.properties
+StandardOutput=null
+StandardError=null
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
