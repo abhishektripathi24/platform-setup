@@ -33,7 +33,21 @@ From the official docs -
     sudo mv confluent-5.4.0-2.12 confluent
     ```
 
-3. Update connect-distributed.properties
+3. Update classpath for any kafka connectors. Add following piece of code in connect-distributed after initializing `java_base_dir` variable. 
+    ```bash
+    vim /opt/confluent/bin/connect-distributed
+ 
+        # Classpath addition for any Kafka Connect connectors
+        for library in $java_base_dir/kafka-connect-*; do
+        classpath_prefix="$CLASSPATH:"
+        if [ "x$CLASSPATH" = "x" ]; then
+        classpath_prefix=""
+        fi
+        CLASSPATH="$classpath_prefix$library/*"
+        done
+    ```
+
+4. Update connect-distributed.properties
     ```bash
     vim /opt/confluent/etc/kafka/connect-distributed.properties
        > bootstrap.servers=10.11.18.58:9092,10.11.18.59:9092,10.11.18.60:9092
@@ -44,13 +58,49 @@ From the official docs -
        > plugin.path=share/java
     ```
 
-4. Start the process on each server
+5. Start the process on each server
     ```bash
     cd /opt/confluent
     ./bin/connect-distributed  etc/kafka/connect-distributed.properties
     ```
-    
- 5. If you linux distro supports systemd, you can supervise kafka connect process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+
+ 6. If you linux distro supports systemd, you can supervise kafka connect process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
  
+ ## Debezium
+ 
+> Debezium is a set of distributed services to capture changes in your databases so that your applications can see those changes and respond to them. Debezium records all row-level changes within each database table in a change event stream, and applications simply read these streams to see the change events in the same order in which they occurred.
+ 
+To know more about Debezium, visit https://debezium.io/documentation/reference/1.0/
+
+1. To add following connectors, extract them inside /opt/confluent/share/java as kafka-connect-{xyz}
+    * Debezium MySQL connector - https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/1.0.0.Final/debezium-connector-mysql-1.0.0.Final-plugin.tar.gz
+    * Debezium PostgreSQL connector - https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/1.0.0.Final/debezium-connector-postgres-1.0.0.Final-plugin.tar.gz 
+    * Debezium MongoDB connector - https://repo1.maven.org/maven2/io/debezium/debezium-connector-mongodb/1.0.0.Final/debezium-connector-mongodb-1.0.0.Final-plugin.tar.gz
+
+ ## Usage
+ * Rest APIs:
+     * List all connectors -
+        * curl -X GET <connect_node_ip>:8083/connectors/
+     * Create a new connector:
+        * [source connector](connectors-config.txt) - curl -X POST <connect_node_ip>:8083/connectors -d '{...}'
+        * [sink connector](connectors-config.txt)
+     * Get connector -
+        * curl -X GET <connect_node_ip>:8083/connectors/<connector-name>
+        * curl -X GET <connect_node_ip>:8083/connectors/<connector-name>/config
+        * curl -X GET <connect_node_ip>:8083/connectors/<connector-name>/status
+     * Pause connector -
+        * curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>/pause
+     * Resume connector -
+        * curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>/resume
+     * Restart connector -
+        * curl -X POST <connect_node_ip>:8083/connectors/<connector-name>/restart
+     * Delete connector -
+        * curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>
+
  ## References
  * https://docs.confluent.io/current/connect/concepts.html
+ * https://debezium.io/releases/1.0/
+ * https://docs.confluent.io/current/connect/references/restapi.html
+ * https://docs.confluent.io/current/connect/managing.html
+ * https://docs.confluent.io/current/connect/managing/connectors.html
+ * https://docs.confluent.io/current/connect/transforms/index.html

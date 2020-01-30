@@ -71,5 +71,13 @@ From the official docs -
  
  6. If you linux distro supports systemd, you can supervise kafka process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
  
+ ## Usage
+* <strong>Create topic:</strong> ./bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1 --topic test
+* <strong>List topic:</strong> ./bin/kafka-topics.sh --list --zookeeper localhost:2181/kafka
+* <strong>Describe topic:</strong> ./bin/kafka-topics.sh --zookeeper localhost:2181/kafka --describe --topic topic-name
+* <strong>Delete topic:</strong> ./bin/kafka-topics.sh --zookeeper localhost:2181/kafka --delete --topic topic-name
+* <strong>Console producer:</strong> ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
+* <strong>Console consumer:</strong> ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+ 
  ## References
  * https://kafka.apache.org/quickstart
