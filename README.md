@@ -23,7 +23,7 @@ Refer individual packages for detailed readme
     * [Elastic Stack](https://github.com/abhishektripathi24/platform-setup/tree/master/elastic-stack)
 
 4. Business Intelligence + Visualization
-    * [Apache Superset]()
+    * [Apache Superset](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-superset)
     * [Grafana]()
 
 5. Orchestration
