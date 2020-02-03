@@ -13,6 +13,7 @@ From the official docs -
 ## Performance Monitoring
 1. [PgHero](https://github.com/ankane/pghero)
     * Linux setup guide: https://github.com/ankane/pghero/blob/master/guides/Linux.md
+    * A sample pg_hero.yml is available [here](sample_pg_hero.yml).
 
 ## Log Monitoring
 1. [PgBouncer](https://github.com/pgbouncer/pgbouncer)

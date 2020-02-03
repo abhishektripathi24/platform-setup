@@ -1,0 +1,9 @@
+databases:
+  postgres:
+    url: postgres://postgres:postgres@localhost:5432/postgres
+  database1:
+    url: postgres://postgres:postgres@localhost:5432/database1
+  database2:
+    url: postgres://postgres:postgres@localhost:5432/database2
+  database1_slave:
+    url: postgres://postgres:postgres@<slave ip/hostname>:5432/database1
