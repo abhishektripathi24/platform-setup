@@ -1,0 +1,14 @@
+[Unit]
+Description=PythonSimpleHttpServer for pgbadger
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/usr/local/etc
+ExecStart=/usr/bin/python3 -m http.server 8080
+Restart=on-abort
+
+[Install]
+WantedBy=multi-user.target

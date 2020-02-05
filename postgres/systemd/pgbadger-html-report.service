@@ -1,0 +1,10 @@
+[Unit]
+Description=Systemd Service - Updates pgbadger log analysis report
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/local/etc
+ExecStart=/bin/bash -c 'pgbadger /var/log/postgresql/postgresql-10-main.log'
+
+[Install]
+WantedBy=default.target
