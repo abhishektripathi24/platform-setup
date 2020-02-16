@@ -12,7 +12,7 @@ From the official docs -
 
 ## Setup
 
-1. Installation on ubuntu 18.04.3 LTS
+1. Installation and compilation on ubuntu 18.04.3 LTS - [ref](https://github.com/antirez/redis)
     ```bash
     sudo apt update
     sudo apt install gcc
@@ -46,28 +46,57 @@ From the official docs -
     ```
 
 3. Configure Redis-Server: update redis.conf
-    * Configure Master:
-        * Comment the line `bind 127.0.0.1` if you want to allow clients to connect redis from all network interfaces and not restricted to loopback interface.  
-        * Disable auth by setting `protected-mode no` if you don't want authentication.
-        * Set `supervised systemd`, if you want to manage redis via systemd. The systemd files for redis-server and redis-sentinel can be found under redis/systemd in this repo.
-        * Set `logfile "/var/log/redis/redis-server.log"`.
-        * Set `stop-writes-on-bgsave-error no` to allow accept writes even if BGSAVE failed.
-        * Set `dir "/data"` to allow saving data files (`dump.rdb`, `appendonly.aof`) at a volume different than root.
-        * Set `appendonly yes` to allow append only file persistence. 
-        * Disable critical commands. (Please add these after testing the setup. Otherwise you won't be able to issue these commands.)
-            ```
-            rename-command FLUSHDB ""
-            rename-command FLUSHALL ""
-            rename-command DEBUG ""
-            ```
+    * Configure Master: 
+        ```
+        # Comment the line if you want to allow clients to connect redis from all network interfaces and not restricted to loopback interface
+        bind 127.0.0.1
+        
+        # Disable auth if you don't want authentication.
+        protected-mode no
+
+        # Set supervised systemd if you want to manage redis via systemd. The systemd files for redis-server and redis-sentinel can be found under redis/systemd in this repo.
+        supervised systemd
+
+        # Set log file & location
+        logfile "/var/log/redis/redis-server.log"
+
+        # Allow accept writes even if BGSAVE failed
+        stop-writes-on-bgsave-error no
+
+        # Allow saving data files (`dump.rdb`, `appendonly.aof`) at a volume different than root
+        dir "/data"
+
+        # Allow append only file persistence
+        appendonly yes
+
+        # Define when to trigger automatic rewrite of the append only file
+        auto-aof-rewrite-percentage 20
+        auto-aof-rewrite-min-size 64mb
+        
+        # Disable critical commands. (Please add these after testing the setup. Otherwise you won't be able to issue these commands
+        rename-command FLUSHDB ""
+        rename-command FLUSHALL ""
+        rename-command DEBUG ""
+        
+        # Enabled active defragmentation (WARNING: THIS FEATURE IS EXPERIMENTAL BUT LOAD TESTED IN PROD)
+        activedefrag yes 
+        ```
     * Configure Slave:
-        * Repeat and add all the properties of master.
-        * Set `replicaof  <masterip> <masterport>`.
+        ```
+        # Repeat and add all the properties of master.
+        ...
+  
+        # Set initial master 
+        replicaof  <masterip> <masterport>
+        ```
 
 4. Configure Redis-Sentinel: update sentinel.conf
-    * Set `logfile "/var/log/redis/redis-sentinel.log"`.
     * Set following for a 3 node sentinel setup on each sentinel node -
         ```bash
+        # Set log file & location      
+        logfile "/var/log/redis/redis-sentinel.log"
+        
+        # Set quorum and failover policy
         sentinel monitor mymaster <ip-address-of-initial-master-redis-server> 6379 2
         sentinel down-after-milliseconds mymaster 5000
         sentinel parallel-syncs mymaster 1
@@ -119,3 +148,5 @@ From the official docs -
 ## References
 * [What redis deployment do you need?](https://blog.octo.com/what-redis-deployment-do-you-need/) 
 * [A medium blog may be?](https://medium.com/@amila922/redis-sentinel-high-availability-everything-you-need-to-know-from-dev-to-prod-complete-guide-deb198e70ea6)
+* [Performance tuning - Datadog](https://www.datadoghq.com/pdf/Understanding-the-Top-5-Redis-Performance-Metrics.pdf)
+* [OOM Killer](https://www.percona.com/blog/2019/08/02/out-of-memory-killer-or-savior/)
