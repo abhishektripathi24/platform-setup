@@ -1,0 +1,21 @@
+[Unit]
+Description=Grafana Server
+Documentation=http://docs.grafana.org
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=grafana
+Group=grafana
+Restart=on-failure
+WorkingDirectory=/opt/grafana
+RuntimeDirectory=grafana
+RuntimeDirectoryMode=0750
+ExecStart=/opt/grafana/bin/grafana-server --config=/opt/grafana/conf/custom.ini --pidfile=/var/run/grafana/grafana-server.pid
+LimitNOFILE=10000
+TimeoutStopSec=20
+UMask=0027
+
+[Install]
+WantedBy=multi-user.target

@@ -22,9 +22,9 @@ Refer individual packages for detailed readme
 4. Centralized Logging
     * [Elastic Stack](https://github.com/abhishektripathi24/platform-setup/tree/master/elastic-stack)
 
-4. Business Intelligence + Visualization
+4. Business Intelligence + Data Visualization
     * [Apache Superset](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-superset)
-    * [Grafana]()
+    * [Grafana](https://github.com/abhishektripathi24/platform-setup/tree/master/grafana)
 
 5. Orchestration
     * [Kubernetes]()
