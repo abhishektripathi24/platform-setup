@@ -4,7 +4,7 @@
 To know more about Redis Sentinel, visit https://redis.io/topics/sentinel
 
 ## Overview
-![](images/sentinel_combined.png)
+![](images/sentinel-combined.png)
 
 From the official docs -
 
@@ -144,6 +144,16 @@ From the official docs -
                 --target-snapshot-name my-exported-backup \
                 --target-bucket <s3-bucket-name>
             ```
+
+## Monitoring  
+
+* Monitoring redis using metrics exposed by [Telegraf](https://docs.influxdata.com/telegraf/v1.13/):
+    * Installation `https://docs.influxdata.com/telegraf/v1.13/introduction/installation/`
+    * Configuration `https://github.com/influxdata/telegraf/tree/master/plugins/inputs/redis`
+    * A sample telegraf configuration and corresponding grafana dashboard is available [here](monitoring).
+    * Dashboard constituents version -
+        * Grafana - `Grafana v5.3.4 (69630b9)`
+        * Telegraf - `Telegraf 1.13.1 (git: HEAD 0c175724)`
 
 ## References
 * [What redis deployment do you need?](https://blog.octo.com/what-redis-deployment-do-you-need/) 
