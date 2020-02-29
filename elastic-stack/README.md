@@ -18,6 +18,7 @@ From the official docs -
     ```bash
     curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.5.2-linux-x86_64.tar.gz
     tar xzvf filebeat-7.5.2-linux-x86_64.tar.gz
+    cd filebeat-7.5.2-linux-x86_64
     ``` 
  2. Configure `filebeat.yml` to read log file and output to elasticsearch's ingest pipeline
     ```bash
@@ -50,6 +51,7 @@ From the official docs -
     ```bash
     wget https://artifacts.elastic.co/downloads/kibana/kibana-7.5.2-linux-x86_64.tar.gz   
     tar xzvf kibana-7.5.2-linux-x86_64.tar.gz
+    cd kibana-7.5.2-linux-x86_64
     ``` 
 2. Update `config/kibana.yml`  - ([x-pack ref](https://www.elastic.co/guide/en/kibana/7.5/settings-xpack-kb.html))
     ```bash
