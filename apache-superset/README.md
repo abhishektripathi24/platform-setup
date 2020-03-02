@@ -1,7 +1,7 @@
 # Superset [Multi-Node Setup]
 <img src="https://github.com/abhishektripathi24/platform-setup/blob/master/apache-superset/images/superset-logo.png" width="700" height="200"/>
 
-To know more about Superset, https://github.com/instacart/superset
+To know more about Superset, visit https://github.com/instacart/superset
 
 ## Overview
 
