@@ -4,7 +4,6 @@
 To know more about Kafka Connect, visit https://docs.confluent.io/current/connect/index.html
 
 ## Overview
-
 From the official docs -
 
 > Kafka Connect, an open source component of Kafka, is a framework for connecting Kafka with external systems such as databases, key-value stores, search indexes, and file systems.
@@ -12,6 +11,7 @@ From the official docs -
 > Using Kafka Connect you can use existing connector implementations for common data sources and sinks to move data into and out of Kafka.
 
 ## Setup
+Installation of `Kafka Connect via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - [ref](https://docs.confluent.io/current/connect/userguide.html)
 
 1. Install Java and set JAVA_HOME
     ```bash
@@ -66,8 +66,7 @@ From the official docs -
 
  6. If you linux distro supports systemd, you can supervise kafka connect process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
  
- ## Debezium
- 
+## Debezium
 > Debezium is a set of distributed services to capture changes in your databases so that your applications can see those changes and respond to them. Debezium records all row-level changes within each database table in a change event stream, and applications simply read these streams to see the change events in the same order in which they occurred.
  
 To know more about Debezium, visit https://debezium.io/documentation/reference/1.0/

@@ -4,16 +4,15 @@
 To know more about Superset, visit https://github.com/instacart/superset
 
 ## Overview
-
 From the official docs -
 
 > Apache Superset (incubating) is a modern, enterprise-ready business intelligence web application.
 
 ## Setup
+Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](https://superset.incubator.apache.org/installation.html)
 
 1. Install dependencies
     ```bash
-    # Ubuntu 18.04 LTS
     sudo apt-get install build-essential libssl-dev libffi-dev python3.6-dev python-pip libsasl2-dev libldap2-dev
     sudo apt-get install python3-venv
     ```
@@ -125,4 +124,3 @@ From the official docs -
 
 ## References
 * https://github.com/instacart/superset/blob/master/docs/installation.rst
-* https://superset.incubator.apache.org/installation.html

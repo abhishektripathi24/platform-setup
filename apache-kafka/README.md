@@ -4,7 +4,6 @@
 To know more about Kafka, visit https://kafka.apache.org/
 
 ## Overview
-
 From the official docs -
 
 > Kafka is generally used for two broad classes of applications:
@@ -14,6 +13,7 @@ From the official docs -
 > b) Building real-time streaming applications that transform or react to the streams of data
 
 ## Setup
+Installation of `Apache Kafka 2.4.0` on `Ubuntu 18.04.3 LTS` - [ref](https://kafka.apache.org/quickstart)
 
 1. Install Java and set JAVA_HOME
     ```bash

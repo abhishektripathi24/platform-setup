@@ -4,7 +4,6 @@
 To know more about Elastic Stack, visit https://www.elastic.co/elastic-stack
 
 ## Overview
-
 From the official docs -
 
 > Elasticsearch is the distributed search and analytics engine at the heart of the Elastic Stack. Logstash and Beats facilitate collecting, aggregating, and enriching your data and storing it in Elasticsearch. Kibana enables you to interactively explore, visualize, and share insights into your data and manage and monitor the stack. Elasticsearch is where the indexing, search, and analysis magic happen.

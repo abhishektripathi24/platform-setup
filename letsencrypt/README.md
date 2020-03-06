@@ -4,13 +4,11 @@
 To know more about Let's Encrypt, visit https://letsencrypt.org/
 
 ## Overview
-
 From the official docs of let's encrypt -
 
 > A nonprofit Certificate Authority providing TLS certificates to million websites. To enable HTTPS on your website, you need to get a certificate (a type of file) from a Certificate Authority (CA). Let’s Encrypt is a CA. In order to get a certificate for your website’s domain from Let’s Encrypt, you have to demonstrate control over the domain. With Let’s Encrypt, you do this using software that uses the ACME protocol which typically runs on your web host.
 
 ## Installation using Certbot ACME client 
-
 Steps to get a `wildcard certificate` for NGINX-Ubuntu 18.04.3 LTS combo from letsencrypt. For a FQDN certificate refer the steps under default section in [certbot instructions](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx).
 
 1. Add Certbot PPA 
@@ -129,6 +127,13 @@ Steps to get a `wildcard certificate` for NGINX-Ubuntu 18.04.3 LTS combo from le
     ** DRY RUN: simulating 'certbot renew' close to cert expiry
     **          (The test certificates above have not been saved.)
     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    ```
+
+## Misc
+
+1. Get public key from certificate -
+    ```bash
+    openssl x509 -in <name>.crt -text -noout -pubkey
     ```
 
 ## References

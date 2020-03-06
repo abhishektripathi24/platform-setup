@@ -4,12 +4,12 @@
 To know more about Zookeeper, visit https://zookeeper.apache.org/
 
 ## Overview
-
 From the official docs -
 
 > Apache ZooKeeper is an effort to develop and maintain an open-source server which enables highly reliable distributed coordination.
 
 ## Setup
+Installation of `Apache Zookeeper 3.5.6` on `Ubuntu 18.04.3 LTS` - [ref](https://zookeeper.apache.org/doc/r3.1.2/zookeeperStarted.html)
 
 1. Install Java and set JAVA_HOME
     ```bash
@@ -54,7 +54,7 @@ From the official docs -
     # on zookeeper server 3
     sudo sh -c "echo '3' > /var/lib/zookeeper/myid"
     ``` 
-    
+
 5. Start the process on each server
     ```bash
     cd /opt/zookeeper

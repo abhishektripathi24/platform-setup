@@ -4,16 +4,14 @@
 To know more about Grafana, visit https://grafana.com/
 
 ## Overview
-
 From the official docs of grafana -
 
 > Grafana is the open source analytics and monitoring solution for every database.
 
 ## Setup
+Installation of `Grafana 6.6.2` on `Ubuntu 18.04.3 LTS` - [ref](https://grafana.com/docs/grafana/latest/installation/debian/)
 
-Installation on ubuntu 18.04.3 LTS - [ref](https://grafana.com/docs/grafana/latest/installation/debian/)
-
-1. Download and extract standalone linux binaries
+1. Download and extract standalone linux binary
     ```bash
     cd /opt
     wget https://dl.grafana.com/oss/release/grafana-6.6.2.linux-amd64.tar.gz
@@ -77,7 +75,12 @@ Installation on ubuntu 18.04.3 LTS - [ref](https://grafana.com/docs/grafana/late
             from_name = Grafana
             ```
 
-3. If you linux distro supports systemd, you can supervise grafana-server process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+3. Start the process
+    ```bash
+    ./bin/grafana-server
+    ``` 
+    
+4. If you linux distro supports systemd, you can supervise grafana-server process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
 ## References
 * https://grafana.com/docs/grafana/latest/alerting/rules/

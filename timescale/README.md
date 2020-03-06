@@ -4,14 +4,12 @@
 To know more about Timescale, visit https://www.timescale.com/
 
 ## Overview
-
 From the official docs -
 
 > TimescaleDB is an open-source time-series database optimized for fast ingest and complex queries. It speaks "full SQL" and is correspondingly easy to use like a traditional relational database, yet scales in ways previously reserved for NoSQL databases.
 
 ## Setup
-
-Installation on ubuntu 18.04.3 LTS
+Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [ref](https://docs.timescale.com/v1.1/getting-started/installation/ubuntu/installation-apt-ubuntu)
 
 1. Setup - Master
     * Follow the documentation for single node installation: https://docs.timescale.com/v1.1/getting-started/installation/ubuntu/installation-apt-ubuntu
@@ -98,7 +96,7 @@ Installation on ubuntu 18.04.3 LTS
     ```bash
     timescaledb-tune
     ```
-3. Sample overridden `postgresql.conf` on a 2cores-4GiB machine: 
+3. Sample custom `postgresql.conf` on a 2cores-4GiB machine: 
     ```bash
     #------------------------------------------------------------------------------
     # CUSTOMIZED OPTIONS
@@ -106,7 +104,7 @@ Installation on ubuntu 18.04.3 LTS
     
     # Add settings for extensions here
     
-    # Connection Settings
+    # Connection settings
     listen_addresses = '*'
     
     # Directory settings
@@ -149,7 +147,7 @@ Installation on ubuntu 18.04.3 LTS
     checkpoint_completion_target = 0.9
     archive_mode = on
     archive_command = 'cp %p /data/postgresql/postgresql/10/main/pg_wal_archive/%f'
-    #archive_command = 'rsync -a %p barman@zoom-timescaledb-barman.rivigo.com:/data/timescaledb-master/incoming/%f'
+    #archive_command = 'rsync -a %p barman@<barman-ip>:/data/timescaledb-master/incoming/%f'
     
     # Miscellaneous settings
     max_connections = 200

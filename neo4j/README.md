@@ -4,14 +4,12 @@
 To know more about Neo4j, visit https://neo4j.com/
 
 ## Overview
-
 From the official docs -
 
 > A graph database is a database designed to treat the relationships between data as equally important to the data itself. It is intended to hold data without constricting it to a pre-defined model. Instead, the data is stored like we first draw it out – showing how each individual entity connects with or is related to others.
   
 ## Setup
-
-Installation on ubuntu 18.04.3 LTS
+Installation of `ineo` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com/cohesivestack/ineo)
 
 1. Install Java8
     ```bash
@@ -20,7 +18,7 @@ Installation on ubuntu 18.04.3 LTS
     java -version
     ```
 
-2. Install ineo - [ref](https://github.com/cohesivestack/ineo)
+2. Install ineo with custom path to external volume  
     ```bash
     curl -sSL http://getineo.cohesivestack.com | bash -s install -d ~/ineo-custom-dir-path
     source ~/.bashrc

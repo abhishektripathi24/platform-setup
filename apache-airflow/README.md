@@ -4,7 +4,6 @@
 To know more about Airflow, visit https://github.com/apache/airflow
 
 ## Overview
-
 From the official docs -
 
 > Apache Airflow (or simply Airflow) is a platform to programmatically author, schedule, and monitor workflows.
@@ -14,6 +13,7 @@ From the official docs -
 > Use Airflow to author workflows as directed acyclic graphs (DAGs) of tasks. The Airflow scheduler executes your tasks on an array of workers while following the specified dependencies. Rich command line utilities make performing complex surgeries on DAGs a snap. The rich user interface makes it easy to visualize pipelines running in production, monitor progress, and troubleshoot issues when needed.
 
 ## Setup
+Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://airflow.apache.org/docs/stable/installation.html)
 
 1. Prerequisites
     * Install Anaconda and gcc.
@@ -64,7 +64,7 @@ From the official docs -
             - apache-airflow[s3]==1.10.3
             - apache-airflow[redis]==1.10.3
         ```
-3. Setup Airflow master node with Celery worker
+3. Setup Airflow master node with celery worker
     ```bash
     export AIRFLOW_HOME=~/airflow
     airflow initdb

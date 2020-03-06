@@ -4,14 +4,12 @@
 To know more about postgresql, visit https://www.postgresql.org/
 
 ## Overview
-
 From the official docs -
 
 > PostgreSQL is a powerful, open source object-relational database system with over 30 years of active development that has earned it a strong reputation for reliability, feature robustness, and performance.
 
 ## Setup
-
-Installation on ubuntu 18.04.3 LTS - [ref](https://www.postgresql.org/download/linux/ubuntu/)
+Installation of `PostgreSQL 10` on `Ubuntu 18.04.3 LTS` - [ref](https://www.postgresql.org/download/linux/ubuntu/)
 
 1. Add PostgreSQL repository, update and install postgresql
     ```bash
@@ -29,18 +27,19 @@ Installation on ubuntu 18.04.3 LTS - [ref](https://www.postgresql.org/download/l
     sudo systemctl status postgresql.service
     ``` 
 
-3. Login and change provide postgres password
+3. Login and change postgres user password
     ```bash
     sudo su postgres
     psql -U postgres
     ALTER USER postgres WITH PASSWORD 'postgres';
     ```
 
-4. Update `postgresql.conf` to allow remote connections -
+4. Update `/etc/postgresql/10/main/postgresql.conf` to allow remote connections -
     ```bash
     listen_addresses = '*'
     ```
-5. Update `pg_hba.conf` to allow remote connections -
+    
+5. Update `/etc/postgresql/10/main/pg_hba.conf` to allow remote authentication -
     ```bash
     # TYPE     DATABASE        USER            ADDRESS METHOD        AUTH_METHOD
     host       all             all             all                   md5
@@ -49,7 +48,6 @@ NOTE: For setting up streaming replication and production grade configuration, r
 
 
 ## Administration
-
 1. User Management - [[pg-docs](https://www.postgresql.org/docs/12/sql-createuser.html), [AWS](https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/), [Blog](https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html)]
     ```bash
     Create Role -
@@ -107,13 +105,13 @@ NOTE: For setting up streaming replication and production grade configuration, r
     GRANT USAGE ON ALL SEQUENCES IN SCHEMA myschema TO readwrite;
     ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT USAGE ON SEQUENCES TO readwrite;
     
-    -- Users creation
+    -- User creation
     CREATE USER reporting_user1 WITH PASSWORD 'some_secret_passwd';
     CREATE USER reporting_user2 WITH PASSWORD 'some_secret_passwd';
     CREATE USER app_user1 WITH PASSWORD 'some_secret_passwd';
     CREATE USER app_user2 WITH PASSWORD 'some_secret_passwd';
     
-    -- Users updation
+    -- User updation
     ALTER USER reporting_user1 WITH PASSWORD 'new_password';
  
     -- Grant privileges to users
@@ -131,7 +129,6 @@ NOTE: For setting up streaming replication and production grade configuration, r
 
 
 ## Monitoring
-
 1. Basic monitoring - [Telegraf](https://docs.influxdata.com/telegraf/v1.13/)
     * Installation -
         * https://docs.influxdata.com/telegraf/v1.13/introduction/installation/

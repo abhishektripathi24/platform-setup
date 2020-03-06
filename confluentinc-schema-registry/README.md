@@ -4,7 +4,6 @@
 To know more about Schema Registry, visit https://docs.confluent.io/current/schema-registry/index.html
 
 ## Overview
-
 From the official docs -
 
 > Confluent Schema Registry provides a serving layer for your metadata. It provides a RESTful interface for storing and retrieving Apache Avro® schemas. It stores a versioned history of all schemas based on a specified subject name strategy, provides multiple compatibility settings and allows evolution of schemas according to the configured compatibility settings and expanded Avro support. It provides serializers that plug into Apache Kafka® clients that handle schema storage and retrieval for Kafka messages that are sent in the Avro format.
@@ -12,6 +11,7 @@ From the official docs -
 > Schema Registry lives outside of and separately from your Kafka brokers. Your producers and consumers still talk to Kafka to publish and read data (messages) to topics. Concurrently, they can also talk to Schema Registry to send and retrieve schemas that describe the data models for the messages.
 
 ## Setup
+Installation of `Schema Registry via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - [ref](https://docs.confluent.io/current/schema-registry/installation/index.html)
 
 1. Install Java and set JAVA_HOME
     ```bash

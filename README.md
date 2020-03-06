@@ -14,19 +14,26 @@ Refer individual packages for detailed readme
     * [Apache Airflow](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-airflow)
 
 3. Databases
-    * [Redis](https://github.com/abhishektripathi24/platform-setup/tree/master/redis) 
-    * [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale)
-    * [Postgres](https://github.com/abhishektripathi24/platform-setup/tree/master/postgres)
-    * [Elasticsearch]()
+    * Relational: [Postgres](https://github.com/abhishektripathi24/platform-setup/tree/master/postgres) ,[Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale), [Mysql](https://github.com/abhishektripathi24/platform-setup/tree/master/mysql)
+    * Key-value: [Redis](https://github.com/abhishektripathi24/platform-setup/tree/master/redis) 
+    * Graph: [Neo4j](https://github.com/abhishektripathi24/platform-setup/tree/master/neo4j)
+    * Distributed Document: [Elasticsearch](https://github.com/abhishektripathi24/platform-setup/tree/master/elasticsearch)
+    * Time-Series: [Prometheus](https://github.com/abhishektripathi24/platform-setup/tree/master/prometheus) (NoSQL), [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale) (SQL)
 
 4. Centralized Logging
-    * [Elastic Stack](https://github.com/abhishektripathi24/platform-setup/tree/master/elastic-stack)
+    * [Elastic Stack - Filebeat, Elasticsearch-Ingest-Pipeline, Kibana](https://github.com/abhishektripathi24/platform-setup/tree/master/elastic-stack)
 
-4. Business Intelligence + Data Visualization
+5. Business Intelligence + Data Visualization
     * [Apache Superset](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-superset)
     * [Grafana](https://github.com/abhishektripathi24/platform-setup/tree/master/grafana)
 
-5. Orchestration
-    * [Kubernetes]()
+6. Container Orchestration
+    * [Kubernetes](https://github.com/abhishektripathi24/platform-setup/tree/master/kubernetes)
+
+7. Miscellaneous:
+    * [Linux Utilities](https://github.com/abhishektripathi24/platform-setup/tree/master/linux/)
+    * [Let's Encrypt](https://github.com/abhishektripathi24/platform-setup/tree/master/letsencrypt/)
+
+...
 
 ![](logos.png)

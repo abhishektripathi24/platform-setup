@@ -11,8 +11,9 @@ From the official docs -
 > Redis Sentinel provides high availability for Redis. In practical terms this means that using Sentinel you can create a Redis deployment that resists without human intervention certain kinds of failures.
 
 ## Setup
+Installation of `Redis 5.0.7` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com/antirez/redis)
 
-1. Installation and compilation on ubuntu 18.04.3 LTS - [ref](https://github.com/antirez/redis)
+1. Download and compile from the source code
     ```bash
     sudo apt update
     sudo apt install gcc
@@ -26,7 +27,7 @@ From the official docs -
     make test
     ```
 
-2. Configure OS: This will remove all the warnings in redis-server logs.
+2. Configure OS: This will remove all the warnings in redis-server logs
     ```bash
     # Swap space
     sudo sysctl vm.swappiness=1 # Temporary
@@ -80,6 +81,9 @@ From the official docs -
         
         # Enabled active defragmentation (WARNING: THIS FEATURE IS EXPERIMENTAL BUT LOAD TESTED IN PROD)
         activedefrag yes 
+        
+        # Limit max memory usage (e.g. 15Gbs) [Caution!! use it wisely]
+        maxmemory 16106127360 
         ```
     * Configure Slave:
         ```
@@ -108,9 +112,22 @@ From the official docs -
         
         > Moral of the story: Each sentinel node should have unique id in the sentinel cluster and this id is generated automatically by sentinel process itself.
 
-5. Testing the cluster setup
-    * Verify that sentinels see each other. If, for ex, you are setting up 3 sentinels, the property `num-other-sentinels` should be `2` upon starting all the sentinel nodes.
-    * Run following commands on any sentinel node - 
+5. Start the process on all the servers
+    ```bash
+    ./src/redis-server redis.conf
+    ./src/redis-sentinel sentinel.conf
+    ```
+
+6. Testing the cluster setup
+    * Verify redis conf changes are properly loaded. Following example shows maxmemory - 
+        ```bash
+        cd <path/to/redis-5.0.7>/src
+        ./redis-cli -p 6379
+        127.0.0.1:6379> config get maxmemory
+        1) "maxmemory"
+        2) "16106127360"
+        ```
+    * Verify that sentinels see each other. If, for ex, you are setting up 3 sentinels, the property `num-other-sentinels` should be `2` upon starting all the sentinel nodes. Run following commands on any sentinel node - 
         ```bash
         cd <path/to/redis-5.0.7>/src
         ./redis-cli -p 26379
@@ -128,7 +145,8 @@ From the official docs -
             127.0.0.1:6379> DEBUG sleep 30
             ```
 
-6. Backup data from AWS ElastiCache
+## Misc
+1. Backup data from AWS ElastiCache
     * Create backup of your ElastiCache.
     * Migrate backup to S3 using aws cli -
         * Create an S3 bucket.
@@ -146,7 +164,6 @@ From the official docs -
             ```
 
 ## Monitoring  
-
 * Monitoring redis using metrics exposed by [Telegraf](https://docs.influxdata.com/telegraf/v1.13/):
     * Installation `https://docs.influxdata.com/telegraf/v1.13/introduction/installation/`
     * Configuration `https://github.com/influxdata/telegraf/tree/master/plugins/inputs/redis`
