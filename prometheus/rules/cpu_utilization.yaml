@@ -1,0 +1,20 @@
+groups:
+  - name: Instance CPU Utilization
+    rules:
+      - alert: Instance CPU utilization alert (>80% - 3m)
+        expr: (100 - cpu_usage_idle{cpu="cpu-total", project!~"abc|def", instance_name!~"abc|def"}) > 80
+        for: 3m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High disk utilization on {{ $labels.instance_name }}."
+          description: "AWS instance {{ $labels.instance_id }} with IP {{ $labels.private_ip }} is at a cpu utilization {{ $value }} (> 80%) for more than 3 minutes."
+
+      - alert: Instance CPU utilization alert (>80% - 10m)
+        expr: (100 - cpu_usage_idle{cpu="cpu-total", project!~"abc|def", instance_name!~"abc|def"}) > 80
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High disk utilization on {{ $labels.instance_name }}."
+          description: "AWS instance {{ $labels.instance_id }} with IP {{ $labels.private_ip }} is at a cpu utilization {{ $value }} (> 80%) for more than 10 minutes."

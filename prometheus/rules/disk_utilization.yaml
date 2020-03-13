@@ -1,0 +1,11 @@
+groups:
+  - name: Instance Disk Utilization
+    rules:
+      - alert: Instance DISK utilization alert (>80% - 5m)
+        expr: disk_used_percent{fstype!~"tmpfs|squashfs|devtmpfs"} > 80
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High disk utilization on {{ $labels.instance_name }}."
+          description: "AWS instance {{ $labels.instance_id }} with IP {{ $labels.private_ip }} having disk at mount point {{ $labels.path }} is at a utilization {{ $value }} (> 80%) for more than 5 minutes."

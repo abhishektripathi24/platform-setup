@@ -1,0 +1,14 @@
+[Unit]
+Description=Prometheus Server
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=prometheus
+Group=prometheus
+ExecStart=/opt/prometheus/bin/prometheus --config.file=/opt/prometheus/prometheus.yml --storage.tsdb.path=/data/prometheus --web.external-url http://<ip of prometheus server>:9090
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

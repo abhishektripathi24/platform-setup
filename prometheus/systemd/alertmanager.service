@@ -1,0 +1,14 @@
+[Unit]
+Description=Alertmanager
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=alertmanager
+Group=alertmanager
+ExecStart=/opt/alertmanager/alertmanager --config.file /opt/alertmanager/alertmanager.yml --web.external-url http://<ip of alertmanager server>:9093
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

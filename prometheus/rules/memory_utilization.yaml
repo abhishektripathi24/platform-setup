@@ -1,0 +1,11 @@
+groups:
+  - name: Instance Memory Utilization
+    rules:
+      - alert: Instance MEMORY utilization alert (>80% - 5m)
+        expr: mem_used_percent > 80
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "High memory utilization on {{ $labels.instance_name }}."
+          description: "AWS instance {{ $labels.instance_id }} with IP {{ $labels.private_ip }} is at a memory utilization {{ $value }} (> 80%) for more than 5 minutes."
