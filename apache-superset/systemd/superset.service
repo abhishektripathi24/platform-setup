@@ -2,9 +2,9 @@
 Description=Superset daemon
 
 [Service]
+Type=simple
 User=superset
 Group=superset
-Type=simple
 Environment="PYTHONPATH=/opt/superset"
 ExecStart=/bin/bash -c 'source /opt/superset/bin/activate & /opt/superset/bin/gunicorn -w 10 --timeout 600 -b  0.0.0.0:8080 --limit-request-line 0 --limit-request-field_size 0 --error-logfile /opt/superset/logs/error_logs --access-logfile /opt/superset/logs/access_logs --log-level info superset:app 2>&1 >> /opt/superset/logs/logs'
 Restart=on-failure

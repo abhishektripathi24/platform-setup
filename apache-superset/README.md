@@ -21,9 +21,10 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
     ```bash
     cd /opt
     python3.6 -m venv superset
+    pip install wheel
     source superset/bin/activate
-    pip install apache-superset
-    superset db upgrade
+    pip install superset==0.29.0rc7
+    superset db upgrade 
     export FLASK_APP=superset
     flask fab create-admin
     superset load_examples
@@ -31,7 +32,7 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
     superset run -h 0.0.0.0 -p 8080 --with-threads --reload --debugger    
     ```
 
-3. Create superset_config.py to set following - (Run superset related command again after creating superset_config.py as ran in step 2)
+3. Create `superset_config.py` to set following - 
     * Superset database backend.
     * LDAP config for SSO.
     * Query timeouts.
@@ -90,23 +91,34 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
     SUPERSET_WEBSERVER_DOMAINS = "comma separated superset server public-ip/domains for sharding queries from UI"
     ```
 
-4. Install Database dependencies for adding datasource in superset
+4. Set `PYTHONPATH` to allow superset to read `superset_config.py` for all superset commands
+    ```bash
+    export PYTHONPATH=/opt/superset
+    ``` 
+    NOTE: Re-run commands with prefix `superset` as in step 2, to reconfigure superset installation as per `superset_config.py`.
+
+5. Install Database dependencies for adding datasource in superset
     ```bash
     # PostgreSQL
     pip install psycopg2-binary
+   
     # MySQL
     sudo yum install mysql-devel # (CentOS)
     sudo apt-get install libmysqlclient-dev # (Ubuntu)
-    sudo pip install mysqlclient
+    sudo pip install mysqlclient pymysql
     ``` 
 
-5. Run webserver via gunicorn
+6. Run webserver via gunicorn
     ```bash
+    # Install Gevent
+    pip install gevent
+   
+    # Start the gunicorn process
     gunicorn \
           -w 10 \
           -k gevent \
           --timeout 600 \
-          -b  0.0.0.0:8080 \
+          -b  0.0.0.0:8090 \
           --limit-request-line 0 \
           --limit-request-field_size 0 \
           --statsd-host localhost:8125 \
@@ -118,9 +130,39 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
     # Note: Avoid gevent coroutine if there is high mem-util.
     ```
 
-6. Setup another server with exactly same configuration and configure a load balancer in-front of these two nodes for HA. 
+7. Setup another server with exactly same configuration and configure a load balancer in-front of these two nodes for HA. 
 
-7. If you linux distro supports systemd, you can supervise superset process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+8. If you linux distro supports systemd, you can supervise superset process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
 ## References
 * https://github.com/instacart/superset/blob/master/docs/installation.rst
+
+## Errors
+* Run `pip install werkzeug==0.16.0` for below error:
+     ```bash
+     (superset) root@hostname:/opt/superset# superset db upgrade 
+     File "/opt/superset/lib/python3.6/site-packages/flask_appbuilder/filemanager.py", line 9, in <module>
+        from werkzeug import secure_filename
+     ImportError: cannot import name 'secure_filename'
+    ```
+* Run `pip uninstall pandas` then `pip install pandas==0.23.4` for below error:
+    ```bash
+    (superset) root@hostname:/opt/superset# superset db upgrade
+    File "/opt/superset/lib/python3.6/site-packages/superset/dataframe.py", line 14, in <module>
+        from pandas.core.common import _maybe_box_datetimelike
+    ImportError: cannot import name '_maybe_box_datetimelike'
+    ```
+* Run `pip uninstall sqlalchemy` then `pip install sqlalchemy==1.2.18` for below error:
+    ```bash
+    (superset) root@hostname:/opt/superset# superset db upgrade
+    File "/opt/superset/lib/python3.6/site-packages/sqlalchemy/orm/query.py", line 2632, in _join_determine_implicit_left_side
+        "Can't determine which FROM clause to join "
+    sqlalchemy.exc.InvalidRequestError: Can't determine which FROM clause to join from, there are multiple FROMS which can join to this entity. Please use the .select_from() method to establish an explicit left side, as well as providing an explcit ON clause if not present already to help resolve the ambiguity.
+    ```
+* Run `fabmanager create-admin --app superset` for below errors:
+    ```bash
+    (superset) root@hostname:/opt/superset# flask fab create-admin
+    Usage: flask [OPTIONS] COMMAND [ARGS]...
+    
+    Error: No such command "fab".
+    ```
