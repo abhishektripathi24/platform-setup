@@ -1,22 +1,20 @@
 [Unit]
-Description=Airflow celery worker daemon
-After=network.target postgresql.service mysql.service redis.service rabbitmq-server.service airflow-flower.service
-Wants=postgresql.service mysql.service redis.service rabbitmq-server.service
+Description=Airflow celery worker
+After=network.target
+Wants=network.target
 
 [Service]
-User=ec2-user
-Group=ec2-user
 Type=simple
-PermissionsStartOnly=True
-RuntimeDirectory=airflow
-RuntimeDirectoryMode=0775
-PIDFile=/run/airflow/worker.pid
-Environment=AIRFLOW_HOME=/home/ec2-user/airflow
-ExecStart=/bin/bash -c 'source /home/ec2-user/anaconda3/bin/activate airflow && /home/ec2-user/anaconda3/envs/airflow/bin/airflow worker --pid /run/airflow/worker.pid'
+User=airflow
+Group=airflow
+Environment=AIRFLOW_HOME=/opt/airflow
+ExecStart=/bin/bash -c 'source /opt/miniconda3/bin/activate airflow && $(which airflow) worker --pid /run/airflow/worker.pid'
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
+StandardOutput=file:/opt/airflow/logs/systemd/worker.log
+StandardError=file:/opt/airflow/logs/systemd/worker.log
 Restart=on-failure
-RestartSec=10s
+RestartSec=5s
 
 [Install]
 WantedBy=multi-user.target

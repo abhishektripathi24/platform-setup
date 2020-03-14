@@ -1,18 +1,19 @@
 [Unit]
-Description=Airflow scheduler daemon
-After=network.target postgresql.service mysql.service redis.service rabbitmq-server.service airflow-webserver.service
-Wants=postgresql.service mysql.service redis.service rabbitmq-server.service
+Description=Airflow scheduler
+After=network.target
+Wants=network.target
 
 [Service]
-User=ec2-user
-Group=ec2-user
 Type=simple
-PIDFile=/run/airflow/scheduler.pid
-Environment=AIRFLOW_HOME=/home/ec2-user/airflow
-ExecStart=/bin/bash -c 'source /home/ec2-user/anaconda3/bin/activate airflow && /home/ec2-user/anaconda3/envs/airflow/bin/airflow scheduler --pid /run/airflow/scheduler.pid'
+User=airflow
+Group=airflow
+Environment=AIRFLOW_HOME=/opt/airflow
+ExecStart=/bin/bash -c 'source /opt/miniconda3/bin/activate airflow && $(which airflow) scheduler --pid /run/airflow/scheduler.pid'
 ExecReload=/bin/kill -s HUP $MAINPID
 ExecStop=/bin/kill -s TERM $MAINPID
-Restart=always
+StandardOutput=file:/opt/airflow/logs/systemd/scheduler.log
+StandardError=file:/opt/airflow/logs/systemd/scheduler.log
+Restart=on-failure
 RestartSec=5s
 
 [Install]

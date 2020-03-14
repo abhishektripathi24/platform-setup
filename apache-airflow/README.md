@@ -16,21 +16,25 @@ From the official docs -
 Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://airflow.apache.org/docs/stable/installation.html)
 
 1. Prerequisites
-    * Install Anaconda and gcc.
+    * Install Miniconda and mysqlclient (along with python3, pip and gcc if not pre-installed).
         ```bash
-        wget https://repo.anaconda.com/archive/Anaconda3-5.3.1-Linux-x86_64.sh
-        bash Anaconda3-5.3.1-Linux-x86_64.sh
+        cd /opt
+        sudo wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+        sudo bash Miniconda3-latest-Linux-x86_64.sh
         vim ~/.bashrc
            > export AIRFLOW_GPL_UNIDECODE=yes
            > export SLUGIFY_USES_TEXT_UNIDECODE=yes
-           > export AIRFLOW_HOME=~/airflow
+           > export AIRFLOW_HOME=/opt/airflow
         source ~/.bashrc
-        sudo yum install gcc
+        sudo apt install python3 python3-dev
+        sudo apt install python-pip
+        sudo apt install gcc
+        pip install mysqlclient
         ```
     
 2. Create a virtual environment and install dependencies
     ```bash
-    conda env create -f=env.yml (using following env.yml)
+    conda env create -f env.yml (using following env.yml)
     conda activate airflow
     ``` 
     * env.yml
@@ -66,7 +70,7 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
         ```
 3. Setup Airflow master node with celery worker
     ```bash
-    export AIRFLOW_HOME=~/airflow
+    export AIRFLOW_HOME=/opt/airflow
     airflow initdb
     # Modify airflow.cfg using airflow.cfg (committed in this repo) and repeat the second step again.
     airflow webserver -p 8080
@@ -92,7 +96,7 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
     * Put following cron in crontab at master node to sync data every minute across workers (Here we have just one external worker)
         ```bash
         crontab -e
-        */1 * * * * cd $AIRFLOW_HOME && rsync -avz -e "ssh -i /home/ec2-user/.ssh/id_rsa" /home/ec2-user/airflow/ ec2-user@10.0.1.140:/home/ec2-user/airflow/ --exclude=logs/
+        */1 * * * * cd $AIRFLOW_HOME && rsync -avz -e "ssh -i /home/<username>/.ssh/id_rsa" /opt/airflow/ <username>@<ip>:/opt/airflow/ --exclude=logs/
         ``` 
         
 6. Reverse Proxy (NGINX config)
@@ -137,4 +141,5 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
                 }
             }
         ```
+      
 7. If you linux distro supports systemd, you can supervise these processes under it. The corresponding systemd service files are present in this repo at [this](systemd) location. 
