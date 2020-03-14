@@ -30,10 +30,13 @@ Refer individual packages for detailed readme
 6. Container Orchestration
     * [Kubernetes](https://github.com/abhishektripathi24/platform-setup/tree/master/kubernetes)
 
-7. Miscellaneous:
-    * [Linux Utilities](https://github.com/abhishektripathi24/platform-setup/tree/master/linux/)
+7. SSL Certs, Load balancing & Reverse Proxying
     * [Let's Encrypt](https://github.com/abhishektripathi24/platform-setup/tree/master/letsencrypt/)
+    * [NGINX](https://github.com/abhishektripathi24/platform-setup/tree/master/nginx/)
 
+8. Miscellaneous:
+    * [Linux Utilities](https://github.com/abhishektripathi24/platform-setup/tree/master/linux/)
+    
 ...
 
 ![](logos.png)
