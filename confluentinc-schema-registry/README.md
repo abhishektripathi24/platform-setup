@@ -31,17 +31,16 @@ Installation of `Schema Registry via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - 
     sudo wget https://packages.confluent.io/archive/5.4/confluent-5.4.0-2.12.tar.gz
     sudo tar -xzf confluent-5.4.0-2.12.tar.gz
     sudo mv confluent-5.4.0-2.12 confluent
+    cd confluent
     ```
 
-3. Update schema-registry.properties
+3. Update `etc/schema-registry/schema-registry.properties`
     ```bash
-    vim /opt/confluent/etc/schema-registry/schema-registry.properties
-       > kafkastore.bootstrap.servers=PLAINTEXT://10.11.18.58:9092,PLAINTEXT://10.11.18.59:9092,PLAINTEXT://10.11.18.60:9092
+    kafkastore.bootstrap.servers=PLAINTEXT://10.11.18.58:9092,PLAINTEXT://10.11.18.59:9092,PLAINTEXT://10.11.18.60:9092
     ```
 
 4. Start the process on each server
     ```bash
-    cd /opt/confluent
     ./bin/schema-registry-start etc/schema-registry/schema-registry.properties
     ```
  

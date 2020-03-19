@@ -31,36 +31,33 @@ Installation of `Kafka Connect via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - [r
     sudo wget https://packages.confluent.io/archive/5.4/confluent-5.4.0-2.12.tar.gz
     sudo tar -xzf confluent-5.4.0-2.12.tar.gz
     sudo mv confluent-5.4.0-2.12 confluent
+    cd confluent
     ```
 
-3. Update classpath for any kafka connectors. Add following piece of code in connect-distributed after initializing `java_base_dir` variable. 
+3. Update classpath for any kafka connectors. Add following piece of code in `bin/connect-distributed` after initializing `java_base_dir` variable. 
     ```bash
-    vim /opt/confluent/bin/connect-distributed
- 
-        # Classpath addition for any Kafka Connect connectors
-        for library in $java_base_dir/kafka-connect-*; do
-        classpath_prefix="$CLASSPATH:"
-        if [ "x$CLASSPATH" = "x" ]; then
-        classpath_prefix=""
-        fi
-        CLASSPATH="$classpath_prefix$library/*"
-        done
+    # Classpath addition for any Kafka Connect connectors
+    for library in $java_base_dir/kafka-connect-*; do
+    classpath_prefix="$CLASSPATH:"
+    if [ "x$CLASSPATH" = "x" ]; then
+    classpath_prefix=""
+    fi
+    CLASSPATH="$classpath_prefix$library/*"
+    done
     ```
 
-4. Update connect-distributed.properties
+4. Update `etc/kafka/connect-distributed.properties`
     ```bash
-    vim /opt/confluent/etc/kafka/connect-distributed.properties
-       > bootstrap.servers=10.11.18.58:9092,10.11.18.59:9092,10.11.18.60:9092
-       > group.id=connect-cluster
-       > offset.storage.replication.factor=3
-       > config.storage.replication.factor=3
-       > status.storage.replication.factor=3
-       > plugin.path=share/java
+    bootstrap.servers=10.11.18.58:9092,10.11.18.59:9092,10.11.18.60:9092
+    group.id=connect-cluster
+    offset.storage.replication.factor=3
+    config.storage.replication.factor=3
+    status.storage.replication.factor=3
+    plugin.path=share/java
     ```
 
 5. Start the process on each server
     ```bash
-    cd /opt/confluent
     ./bin/connect-distributed  etc/kafka/connect-distributed.properties
     ```
 
@@ -71,7 +68,7 @@ Installation of `Kafka Connect via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - [r
  
 To know more about Debezium, visit https://debezium.io/documentation/reference/1.0/
 
-1. To add following connectors, extract them inside /opt/confluent/share/java as kafka-connect-{xyz}
+1. To add following connectors, extract them inside `/opt/confluent/share/java` as `kafka-connect-{xyz}`
     * Debezium MySQL connector - https://repo1.maven.org/maven2/io/debezium/debezium-connector-mysql/1.0.0.Final/debezium-connector-mysql-1.0.0.Final-plugin.tar.gz
     * Debezium PostgreSQL connector - https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/1.0.0.Final/debezium-connector-postgres-1.0.0.Final-plugin.tar.gz 
     * Debezium MongoDB connector - https://repo1.maven.org/maven2/io/debezium/debezium-connector-mongodb/1.0.0.Final/debezium-connector-mongodb-1.0.0.Final-plugin.tar.gz
@@ -79,22 +76,22 @@ To know more about Debezium, visit https://debezium.io/documentation/reference/1
  ## Usage
  * Rest APIs:
      * List all connectors -
-        * curl -X GET <connect_node_ip>:8083/connectors/
+        * `curl -X GET <connect_node_ip>:8083/connectors/`
      * Create a new connector:
-        * [source connector](connectors-config.txt) - curl -X POST <connect_node_ip>:8083/connectors -d '{...}'
+        * [source connector](connectors-config.txt) - `curl -X POST <connect_node_ip>:8083/connectors -d '{...}'`
         * [sink connector](connectors-config.txt)
      * Get connector -
-        * curl -X GET <connect_node_ip>:8083/connectors/<connector-name>
-        * curl -X GET <connect_node_ip>:8083/connectors/<connector-name>/config
-        * curl -X GET <connect_node_ip>:8083/connectors/<connector-name>/status
+        * `curl -X GET <connect_node_ip>:8083/connectors/<connector-name>`
+        * `curl -X GET <connect_node_ip>:8083/connectors/<connector-name>/config`
+        * `curl -X GET <connect_node_ip>:8083/connectors/<connector-name>/status`
      * Pause connector -
-        * curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>/pause
+        * `curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>/pause`
      * Resume connector -
-        * curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>/resume
+        * `curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>/resume`
      * Restart connector -
-        * curl -X POST <connect_node_ip>:8083/connectors/<connector-name>/restart
+        * `curl -X POST <connect_node_ip>:8083/connectors/<connector-name>/restart`
      * Delete connector -
-        * curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>
+        * `curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>`
 
  ## References
  * https://docs.confluent.io/current/connect/concepts.html
@@ -103,3 +100,6 @@ To know more about Debezium, visit https://debezium.io/documentation/reference/1
  * https://docs.confluent.io/current/connect/managing.html
  * https://docs.confluent.io/current/connect/managing/connectors.html
  * https://docs.confluent.io/current/connect/transforms/index.html
+ * https://debezium.io/documentation/reference/1.0/connectors/index.html
+ * https://debezium.io/documentation/reference/1.0/assemblies/cdc-mysql-connector/as_deploy-the-mysql-connector.html
+ * https://debezium.io/documentation/reference/1.0/connectors/postgresql.html

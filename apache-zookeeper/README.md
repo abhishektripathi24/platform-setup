@@ -23,23 +23,23 @@ Installation of `Apache Zookeeper 3.5.6` on `Ubuntu 18.04.3 LTS` - [ref](https:/
     echo $JAVA_HOME
     ```
     
-2. Download Zookeeper Binary
+2. Download zookeeper binary
     ```bash
     cd /opt
     wget http://www-eu.apache.org/dist/zookeeper/stable/apache-zookeeper-3.5.6-bin.tar.gz
     tar -xzf apache-zookeeper-3.5.6-bin.tar.gz
     mv apache-zookeeper-3.5.6-bin.tar.gz zookeeper
-    cp /opt/zookeeper/conf/zoo_sample.cfg /opt/zookeeper/conf/zoo.cfg    
+    cp /opt/zookeeper/conf/zoo_sample.cfg /opt/zookeeper/conf/zoo.cfg
+    cd zookeeper    
     ```
     
-3. Update zoo.cfg (the following steps are for a cluster of 3 nodes)
+3. Update `conf/zoo.cfg` (the following steps are for a cluster of 3 nodes)
     ```bash
-    vim /opt/zookeeper/conf/zoo.cfg
-        > dataDir=/var/lib/zookeeper
-        > server.1=10.11.18.58:2888:3888
-        > server.2=10.11.18.59:2888:3888
-        > server.3=10.11.18.60:2888:3888
-        > 4lw.commands.whitelist=srvr,stat,wchc,dump,crst,srst,envi,conf,telnet,wchs,wchp,dirs,cons,mntr,isro,ruok,gtmk,stmk
+    dataDir=/var/lib/zookeeper
+    server.1=10.11.18.58:2888:3888
+    server.2=10.11.18.59:2888:3888
+    server.3=10.11.18.60:2888:3888
+    4lw.commands.whitelist=srvr,stat,wchc,dump,crst,srst,envi,conf,telnet,wchs,wchp,dirs,cons,mntr,isro,ruok,gtmk,stmk
     ```
 
 4. Provide unique ids on each zookeeper node
