@@ -100,7 +100,7 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
         ``` 
         
 6. Reverse Proxy (NGINX config)
-    * Update following variable in airflow.cfg for airflow admin
+    * Update following variable in `airflow.cfg` for airflow admin
         ```
         base_url = http://my_host/myorg/airflow
         ```
@@ -120,7 +120,7 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
           }
         }
         ```
-    * Update following variable in airflow.cfg for flower dashboard
+    * Update following variable in `airflow.cfg` for flower dashboard
         ```
         flower_url_prefix = /myorg/flower
         ```
