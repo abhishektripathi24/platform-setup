@@ -127,7 +127,6 @@ NOTE: For setting up streaming replication and production grade configuration, r
     SELECT pg_size_pretty(pg_total_relation_size('tablename'));
     ```
 
-
 ## Monitoring
 1. Basic monitoring - [Telegraf](https://docs.influxdata.com/telegraf/v1.13/)
     * Installation -

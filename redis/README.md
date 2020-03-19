@@ -46,7 +46,7 @@ Installation of `Redis 5.0.7` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com
     sudo systemctl enable disable-thp.service && sudo systemctl start disable-thp.service # Permanent
     ```
 
-3. Configure Redis-Server: update redis.conf
+3. Configure Redis-Server: update `redis.conf`
     * Configure Master: 
         ```
         # Comment the line if you want to allow clients to connect redis from all network interfaces and not restricted to loopback interface
@@ -94,7 +94,7 @@ Installation of `Redis 5.0.7` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com
         replicaof  <masterip> <masterport>
         ```
 
-4. Configure Redis-Sentinel: update sentinel.conf
+4. Configure Redis-Sentinel: update `sentinel.conf`
     * Set following for a 3 node sentinel setup on each sentinel node -
         ```bash
         # Set log file & location      
@@ -117,7 +117,7 @@ Installation of `Redis 5.0.7` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com
     ./src/redis-server redis.conf
     ./src/redis-sentinel sentinel.conf
     ```
-
+   
 6. Testing the cluster setup
     * Verify redis conf changes are properly loaded. Following example shows maxmemory - 
         ```bash

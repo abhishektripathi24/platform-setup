@@ -17,13 +17,14 @@ Installation of `ineo` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com/cohesi
     sudo apt install openjdk-8-jdk openjdk-8-jre
     java -version
     ```
-
+   
 2. Install ineo with custom path to external volume  
     ```bash
     curl -sSL http://getineo.cohesivestack.com | bash -s install -d ~/ineo-custom-dir-path
     source ~/.bashrc
     ```
-3. Orchestration -
+   
+3. Orchestration commands
     ```bash
     # Download a specific version of neo4j
     ineo create -v 3.2.0 -p7474 <instance_name> 
