@@ -15,26 +15,32 @@ Refer individual packages for detailed readme
 
 3. Databases
     * Relational: [Postgres](https://github.com/abhishektripathi24/platform-setup/tree/master/postgres) ,[Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale), [Mysql](https://github.com/abhishektripathi24/platform-setup/tree/master/mysql)
+    * Document: [Mongo](https://github.com/abhishektripathi24/platform-setup/tree/master/mongo)
     * Key-value: [Redis](https://github.com/abhishektripathi24/platform-setup/tree/master/redis) 
     * Graph: [Neo4j](https://github.com/abhishektripathi24/platform-setup/tree/master/neo4j)
-    * Distributed Document: [Elasticsearch](https://github.com/abhishektripathi24/platform-setup/tree/master/elasticsearch)
     * Time-Series: [Prometheus](https://github.com/abhishektripathi24/platform-setup/tree/master/prometheus) (NoSQL), [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale) (SQL)
 
-4. Centralized Logging
+4. Search engines
+    * [Elasticsearch](https://github.com/abhishektripathi24/platform-setup/tree/master/elasticsearch)
+    
+5. Centralized Logging
     * [Elastic Stack - Filebeat, Elasticsearch-Ingest-Pipeline, Kibana](https://github.com/abhishektripathi24/platform-setup/tree/master/elastic-stack)
 
-5. Business Intelligence + Data Visualization
+6. Business Intelligence + Data Visualization
     * [Apache Superset](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-superset)
     * [Grafana](https://github.com/abhishektripathi24/platform-setup/tree/master/grafana)
 
-6. Container Orchestration
+7. Container Orchestration
     * [Kubernetes](https://github.com/abhishektripathi24/platform-setup/tree/master/kubernetes)
 
-7. SSL Certs, Load balancing & Reverse Proxying
+8. Service Discovery, Health Checking, Configuration
+    * [Consul](https://github.com/abhishektripathi24/platform-setup/tree/master/consul)
+
+9. SSL Certs, Load balancing & Reverse Proxying
     * [Let's Encrypt](https://github.com/abhishektripathi24/platform-setup/tree/master/letsencrypt/)
     * [NGINX](https://github.com/abhishektripathi24/platform-setup/tree/master/nginx/)
 
-8. Miscellaneous:
+10. Miscellaneous:
     * [Linux Utilities](https://github.com/abhishektripathi24/platform-setup/tree/master/linux/)
     
 ...
