@@ -55,7 +55,20 @@ From the official docs -
         df -h
         ```
 
-3. SSH tunnels and port forwarding -
+3. Host configuration
+    ```bash
+    # Change hostname
+    sudo hostnamectl set-hostname <some-name>
+ 
+    # Preserve hostname across reboots
+    set `preserve_hostname: true` in `/etc/cloud/cloud.cfg`
+    ```
+
+4. VM Optimizations - [ref](https://www.kernel.org/doc/Documentation/sysctl/vm.txt)
+
+5. Systemd - Service & Timers - [ref](https://www.freedesktop.org/software/systemd/man/index.html)
+
+6. SSH tunnels and port forwarding -
     ```bash
     # Local SSH Port Forwarding
     ssh -v -N -i .ssh/riv_devops.pem -L 8080:10.8.77.122:9090 ec2-user@10.8.77.122
@@ -69,4 +82,13 @@ From the official docs -
     # Dynamic SSH Port Forwarding (Socks Proxy)
     ssh -i .ssh/riv_devops.pem -D 1080 -C -q -N -v ec2-user@10.8.77.122
     ```
+
+7. Login/Non-Login-Interactive/Non-Interactive shells
+    * https://unix.stackexchange.com/questions/38175/difference-between-login-shell-and-non-login-shell 
+    * http://mywiki.wooledge.org/DotFiles
+    * https://docstore.mik.ua/orelly/unix3/upt/ch03_04.htm
+    * https://askubuntu.com/questions/463462/sequence-of-scripts-sourced-upon-login
     
+8. Find & Replace - `grep -rl matchstring somedir/ | xargs sed -i 's/matchstring/newstring/g'`
+
+9. List all connected client's IPs, group by count - `netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head`
