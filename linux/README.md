@@ -45,7 +45,7 @@ From the official docs -
         # Get the UUID of the device.
         sudo blkid
 
-        # Append the following like in /etc/fstab
+        # Append the following line in /etc/fstab
         sudo vim /etc/fstab
         UUID=<UUID of the device>  /data  xfs  defaults,nofail  0  2
 
@@ -92,3 +92,37 @@ From the official docs -
 8. Find & Replace - `grep -rl matchstring somedir/ | xargs sed -i 's/matchstring/newstring/g'`
 
 9. List all connected client's IPs, group by count - `netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head`
+
+10. Configure DNS nameservers on `Ubuntu 18.04.3 LTS` via `Netplan - the default network management tool on Ubuntu 18.04.` - [ref](https://linuxize.com/post/how-to-set-dns-nameservers-on-ubuntu-18-04/)
+    ```bash
+    # Check current nameservers
+    sudo systemd-resolve --status | grep 'DNS Servers' -A2
+    
+    # Netplan configuration files are stored in the /etc/netplan directory
+    sudo vim /etc/netplan/01-netcfg.yaml
+    
+    # Update nameservers
+    nameservers:
+       addresses: [1.1.1.1, 1.0.0.1]
+    
+    # Apply changes
+    sudo netplan apply
+    
+    # verify that the new DNS resolvers are set
+    sudo systemd-resolve --status | grep 'DNS Servers' -A5
+    or cat /run/systemd/resolve/resolv.conf
+    or cat /run/systemd/resolve/stub-resolv.conf
+    or cat /etc/resolv.conf
+    ```
+
+11. Debug network problems
+    * Monitor incoming packets using `tcpdump` - [ref](https://www.tecmint.com/12-tcpdump-commands-a-network-sniffer-tool/)
+        ```bash
+        # Get IP address of the pinging client - capture ICMP packets
+        sudo tcpdump -i ens5 icmp
+        
+        # Get IP address of the client connecting on port 5432
+        sudo tcpdump -i ens5 port 5432
+        ```
+
+11. Configure Linux Firewall using IPTables - [ref](https://www.geeksforgeeks.org/how-to-setup-firewall-in-linux/) 
