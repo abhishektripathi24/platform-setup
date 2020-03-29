@@ -1,0 +1,17 @@
+[Unit]
+Description=consul-server
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+ExecStart=/usr/local/bin/consul agent -bind=<machine-ip> -config-dir /etc/consul.d/
+KillSignal=SIGINT
+Restart=on-failure
+StandardOutput=null
+StandardError=null
+
+[Install]
+WantedBy=multi-user.target
