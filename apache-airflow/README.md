@@ -142,4 +142,4 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
             }
         ```
       
-7. If you linux distro supports systemd, you can supervise these processes under it. The corresponding systemd service files are present in this repo at [this](systemd) location. 
+7. If your linux distro supports systemd, you can supervise these processes under it. The corresponding systemd service files are present in this repo at [this](systemd) location. 

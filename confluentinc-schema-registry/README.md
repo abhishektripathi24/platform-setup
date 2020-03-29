@@ -44,7 +44,7 @@ Installation of `Schema Registry via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - 
     ./bin/schema-registry-start etc/schema-registry/schema-registry.properties
     ```
  
- 5. If you linux distro supports systemd, you can supervise kafka process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+ 5. If your linux distro supports systemd, you can supervise kafka process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
  
  ## References
  * https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html

@@ -60,7 +60,7 @@ Installation of `Consul v1.7.2` on `Ubuntu 18.04.3 LTS` - [ref](https://learn.ha
     sudo consul agent -bind=<ip-of-that-machine> -config-dir /etc/consul.d/
     ``` 
 
-5. Verify the cluster
+5. Test the setup
     ```bash
     # via ui
     http://localhost:8500/ui
@@ -151,7 +151,7 @@ Installation of `Consul Template 0.24.1` on `Ubuntu 18.04.3 LTS` - [ref1](https:
     curl --header 'Host: <value of server_name>' 'http://<nginx-ip>:80/any/api/path/of/service'
     ``` 
 
-5. If you linux distro supports systemd, you can supervise consul-template process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+5. If your linux distro supports systemd, you can supervise consul-template process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
 # References
 * https://danielparker.me/nginx/consul-template/consul/nginx-consul-template/

@@ -107,12 +107,12 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
     -Xmx2g
    ```
 
-8. Start the process
+8. Start the process on each server
     ```bash
     ./bin/elasticsearch
     ``` 
     
-9. If you linux distro supports systemd, you can supervise elasticsearch-server process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+9. If your linux distro supports systemd, you can supervise elasticsearch-server process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
 ## Misc
 1. Data migration from another elasticsearch cluster - [ref](https://www.elastic.co/guide/en/cloud/current/ec-migrate-data.html)
@@ -177,7 +177,8 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
       }
     }'
     ```
-4. Get and update index settings
+4. Get settings and mappings of an index - `curl localhost:9200/<index-name>`
+5. Get and update index settings
     ```http request
     curl localhost:9200/<index-name>/_settings
     
@@ -189,6 +190,8 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
       }
     }'
     ```
+6. curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'
+7. curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
 
 ## References
 * Architectures - Hot-warm-cold
@@ -199,3 +202,7 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
     * https://thoughts.t37.net/designing-the-perfect-elasticsearch-cluster-the-almost-definitive-guide-e614eabc1a87#e70b
 * Sharding 
     * https://stackoverflow.com/questions/53214628/elasticsearch-how-does-sharding-affect-indexing-performance/53216210#53216210
+* Joins
+    * https://blog.mimacom.com/parent-child-elasticsearch/
+* Cheatsheet
+    * https://thoughts.t37.net/an-elasticsearch-cheat-sheet-9b92c9211d7b

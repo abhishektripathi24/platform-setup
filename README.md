@@ -33,7 +33,7 @@ Refer individual packages for detailed readme
 7. Container Orchestration
     * [Kubernetes](https://github.com/abhishektripathi24/platform-setup/tree/master/kubernetes)
 
-8. Service Discovery, Health Checking, Configuration
+8. Service Discovery, Health Checking & Configuration
     * [Consul](https://github.com/abhishektripathi24/platform-setup/tree/master/consul)
 
 9. SSL Certs, Load balancing & Reverse Proxying

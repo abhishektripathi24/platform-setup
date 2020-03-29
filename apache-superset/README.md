@@ -132,7 +132,7 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
 
 7. Setup another server with exactly same configuration and configure a load balancer in-front of these two nodes for HA. 
 
-8. If you linux distro supports systemd, you can supervise superset process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+8. If your linux distro supports systemd, you can supervise superset process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
 ## References
 * https://github.com/instacart/superset/blob/master/docs/installation.rst

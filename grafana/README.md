@@ -80,7 +80,7 @@ Installation of `Grafana 6.6.2` on `Ubuntu 18.04.3 LTS` - [ref](https://grafana.
     ./bin/grafana-server
     ``` 
     
-4. If you linux distro supports systemd, you can supervise grafana-server process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+4. If your linux distro supports systemd, you can supervise grafana-server process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
 ## References
 * https://grafana.com/docs/grafana/latest/alerting/rules/
