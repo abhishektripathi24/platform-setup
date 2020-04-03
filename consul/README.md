@@ -76,7 +76,7 @@ Installation of `Consul v1.7.2` on `Ubuntu 18.04.3 LTS` - [ref](https://learn.ha
 
 6. If you linux distro supports systemd, you can supervise consul-server process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
-## Misc
+## Usage
 1. Register service via HTTP API - [ref](https://www.consul.io/api/agent/service.html#register-service)
     ```http request
     curl -X PUT \
@@ -113,9 +113,79 @@ Installation of `Consul v1.7.2` on `Ubuntu 18.04.3 LTS` - [ref](https://learn.ha
     e.g. dig +short @10.11.18.60 -p 8600 oauth-service-stg.service.consul
     ```
 
-## References
-* https://learn.hashicorp.com/consul/security-networking/forwarding
+<br/>
 
+## Setup DNS Forwarding  
+Forward DNS requests for domain `.consul` on port `53` to `8600` via `Unbound 1.6.7` on `Ubuntu 18.04.3 LTS` - [ref](https://learn.hashicorp.com/consul/security-networking/forwarding) 
+
+1. Install `Unbound 1.6.7` on all the nodes where consul was installed
+    ```bash
+    sudo apt update
+    sudo apt install unbound -y
+    ```
+ 
+2. Create config file for forwarding `.consul` domain request from port `53` to `8600` at `/etc/unbound/unbound.conf.d/consul.conf` with the following properties - [ref](https://www.consul.io/docs/agent/options.html)
+    ```bash
+    #Allow insecure queries to local resolvers
+    server:
+      do-not-query-localhost: no
+      domain-insecure: "consul"
+    
+    #Add consul as a stub-zone
+    stub-zone:
+      name: "service.consul."
+      stub-addr: 127.0.0.1@8600
+    
+    #Forward domains other than .consul to the following nameservers
+    forward-zone:
+      name: "."
+      forward-addr: <your-name-server-ip-1>@53
+      forward-addr: <your-name-server-ip-2>@53
+    ```
+    
+3. Stop `systemd-resolved.service` on all the nodes where unbound is running
+    ```bash
+    sudo systemctl stop systemd-resolved.service
+    sudo systemctl disable systemd-resolved.service
+    ```
+
+4. Update `/etc/resolv.conf` to replace `nameserver 127.0.0.53` to following
+    ```bash
+    nameserver 127.0.0.1
+    ```
+    
+5. If you face following msg everytime a command is run via sudo - `sudo: unable to resolve host <hostname>`, update `/etc/hosts` as follows - [ref](https://askubuntu.com/questions/59458/error-message-sudo-unable-to-resolve-host-none)
+    ```bash
+    127.0.1.1       <hostname>
+    ```
+ 
+6. Test the setup - [ref](https://www.consul.io/docs/agent/dns.html)
+    ```bash
+    dig +short @<unbound/consul-server-ip> -p 53 <service-name>.service.consul
+    ```
+
+7. Update nameservers in `/etc/systemd/resolved.conf` on the nodes which want to resolve `.service.consul` domain
+    ```bash
+    [Resolve]
+    DNS=<unbound-ip-1> <unbound-ip-2> <unbound-ip-3>
+
+    E.g.
+    [Resolve]
+    DNS=10.11.18.58 10.11.18.59 10.11.18.60 
+    ``` 
+
+8. Restart `systemd-resolved.service`
+    ```bash
+    sudo systemctl daemon-reload
+    sudo systemctl restart systemd-resolved.service
+    ```
+
+9. Verify name resolution - [ref](https://www.consul.io/docs/agent/dns.html)
+    ```bash
+    dig +short <service-name>.service.consul
+    ```
+
+ <br/>
  
 ## Consul Template and NGINX Load Balancing Setup
 Installation of `Consul Template 0.24.1` on `Ubuntu 18.04.3 LTS` - [ref1](https://learn.hashicorp.com/consul/integrations/nginx-consul-template), [ref2](https://github.com/hashicorp/consul-template)
