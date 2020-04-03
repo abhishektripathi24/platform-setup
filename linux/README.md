@@ -10,9 +10,19 @@ From the official docs -
 
 ## Administration
 1. User Management -
-    * Sudo user with password-less login
+    * Create user
         ```bash
         adduser <username>
+        ```
+    * Enable password authentication
+        ```bash
+        vim /etc/ssh/sshd_config
+        > PasswordAuthentication yes
+  
+        sudo systemctl restart sshd
+        ```
+    * Sudo user with password-less login
+        ```bash
         echo '<username> ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/<username>
         sudo su <username>
         vim .ssh/authorized_keys > '<public key of username>'

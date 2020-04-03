@@ -119,6 +119,9 @@ NOTE: For setting up streaming replication and production grade configuration, r
     GRANT readonly TO reporting_user2;
     GRANT readwrite TO app_user1;
     GRANT readwrite TO app_user2;
+    
+    -- Misc
+    ALTER ROLE name RENAME TO new_name;
     ``` 
 
 2. Database and Table size
