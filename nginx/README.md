@@ -25,7 +25,42 @@ Installation of `NGINX 1.14.0` on `Ubuntu 18.04.3 LTS` - [ref](https://www.nginx
     sudo systemctl enable nginx
     ``` 
 
-3. Create config files
+## General Info
+1. There are 4 top level directives - `event`, `http`, `mail`, `stream` - [ref](https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/#contexts)
+2. For `HTTP load balancing` and `HTTP reverse proxy`, the configs should be resolved into `http { }` block inside the main `nginx.conf`, which should mostly already be present. Also, the following paths are already included inside http block: `include /etc/nginx/conf.d/*.conf;` and `include /etc/nginx/sites-enabled/*;` - [ref](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/) 
+3. For `TCP/UDP load balancing` and `TCP/UDP reverse proxy`, the configs should be resolved into `stream { }` block inside the main `nginx.conf`. If this block is not present, create the following - `stream { include /etc/nginx/tcpconf.d/*.conf; }` - [ref](https://docs.nginx.com/nginx/admin-guide/load-balancer/tcp-udp-load-balancer/)
+
+## Configure NGINX as Load Balancer
+1. General e.g. for an http load balancer is - [ref1](http://nginx.org/en/docs/http/load_balancing.html), [ref2](http://nginx.org/en/docs/http/ngx_http_upstream_module.html) 
+    ```bash
+     upstream myapp1 {
+        server srv1.example.com weight=3;
+        server srv2.example.com;
+        server srv3.example.com;
+     }
+
+     server {
+        listen 80;
+        location / {
+            proxy_pass http://myapp1;
+        }
+     }
+    ```
+
+2. General e.g. for a tcp/udp load balancer is - [ref1](https://www.nginx.com/blog/tcp-load-balancing-udp-load-balancing-nginx-tips-tricks/#upstream)
+    ```bash
+    upstream mysql_backends {
+       server <ip-1>:3306;
+       server <ip-2>:3306;
+    }
+    server {
+       listen 3306;
+       proxy_pass mysql_backends;
+    }
+    ```
+
+## Configure NGINX as Reverse Proxy
+1. Create config files
     ```bash
     # create a file under sites-available <eg. custom-proxy>
     sudo touch /etc/nginx/sites-available/custom-proxy
@@ -33,9 +68,8 @@ Installation of `NGINX 1.14.0` on `Ubuntu 18.04.3 LTS` - [ref](https://www.nginx
     # create symlink of this file under sites-enabled (nginx reads sites-enabled for configs)
     ln -s ../sites-available/custom-proxy custom-proxy
    ```
-
-## Configure NGINX as Reverse Proxy
-1. Configure settings for *reverse proxy* by writing following content into `sites-available/custom-proxy` - [ref](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) 
+   
+2. Configure settings for *reverse proxy* by writing following content into `sites-available/custom-proxy` - [ref](https://docs.nginx.com/nginx/admin-guide/web-server/reverse-proxy/) 
     ```bash
     # Redirect all http requests on the host application.blueleaf.com to https
     server {
@@ -70,12 +104,12 @@ Installation of `NGINX 1.14.0` on `Ubuntu 18.04.3 LTS` - [ref](https://www.nginx
     }
     ```
 
-2. Reload live nginx process with the new config
+3. Reload live nginx process with the new config
     ```bash
    sudo systemctl reload nginx 
    ``` 
 
-3. Examples
+4. Examples
     * Host based routing `(assume 3 hosts: example1.com, example2.com, example3.com)`
         ```bash
         server {
@@ -147,12 +181,16 @@ Installation of `NGINX 1.14.0` on `Ubuntu 18.04.3 LTS` - [ref](https://www.nginx
            ...
        }
        ```
-
-## Configure NGINX as Load Balancer
-* https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/
-* http://nginx.org/en/docs/http/load_balancing.html
-* http://nginx.org/en/docs/http/ngx_http_upstream_module.html
+        
+## Errors
+* Install the stream module using `sudo apt-get install nginx-extras` if there is following error:
+     ```bash
+     nginx: [emerg] unknown directive "stream" in /etc/nginx/nginx.conf
+    ```
+    NOTE: This error occurs where the stream module is absent. Verify the installation/inclusin of stream module using command `nginx -V`. The output should contain `--with-stream=dynamic --with-stream_ssl_module`.
 
 ## References
 * https://gist.github.com/soheilhy/8b94347ff8336d971ad0
 * https://linuxize.com/post/how-to-install-nginx-on-ubuntu-18-04/
+* https://www.nginx.com/blog/tcp-load-balancing-udp-load-balancing-nginx-tips-tricks/#upstream
+* https://medium.com/@web.development/high-performance-load-balancing-with-nginx-part-1-of-3-26e0e805bbcf
