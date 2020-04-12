@@ -48,7 +48,7 @@ NOTE: For setting up streaming replication and production grade configuration, r
 
 
 ## Administration
-1. User Management - [[pg-docs](https://www.postgresql.org/docs/12/sql-createuser.html), [AWS](https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/), [Blog](https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html)]
+1. User Management - [[pg-docs-create-user](https://www.postgresql.org/docs/12/sql-createuser.html), [pg-docs-grant](https://www.postgresql.org/docs/12/sql-grant.html), [AWS](https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/), [Blog](https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html)]
     ```bash
     Create Role -
     -------------
@@ -75,7 +75,8 @@ NOTE: For setting up streaming replication and production grade configuration, r
     REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM readonly;
     REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM readonly;
     REVOKE ALL PRIVILEGES ON SCHEMA public FROM readonly;
-    (REASSIGN | DROP) OWNED BY readonly to postgres;
+    REASSIGN OWNED BY readonly to postgres;
+    DROP OWNED BY readonly; - https://stackoverflow.com/questions/9840955/postgresql-drop-role-fails-because-of-default-privileges
     DROP ROLE readonly;
     
     ========================================================================
@@ -119,9 +120,32 @@ NOTE: For setting up streaming replication and production grade configuration, r
     GRANT readonly TO reporting_user2;
     GRANT readwrite TO app_user1;
     GRANT readwrite TO app_user2;
+
+    -- Sample application user
+ 
+    1. Create role and grant permissions 
+    CREATE ROLE airflow WITH login PASSWORD 'airflow';
+    GRANT CONNECT ON DATABASE airflow TO airflow;
+    GRANT ALL PRIVILEGES ON SCHEMA public TO airflow;
+    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO airflow;
+    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO airflow;
+    GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO airflow;
+ 
+    2. Make this role/user as the owner of the tables (if any), from postgres to airflow
+    ALTER TABLE table_name OWNER TO airflow;
     
+    3. Revoke previliges
+    REVOKE CONNECT ON DATABASE airflow FROM airflow;
+    REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM airflow;
+    REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM airflow;
+    REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM airflow;
+    REVOKE ALL PRIVILEGES ON SCHEMA public FROM airflow;
+    REASSIGN OWNED BY airflow to postgres;
+    DROP OWNED BY airflow;
+    DROP ROLE airflow;
+ 
     -- Misc
-    ALTER ROLE name RENAME TO new_name;
+    ALTER ROLE name RENAME TO new_name;   
     ``` 
 
 2. Database and Table size
