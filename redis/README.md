@@ -145,6 +145,14 @@ Installation of `Redis 5.0.7` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com
             127.0.0.1:6379> DEBUG sleep 30
             ```
 
+## Administration
+List of all commands is available here - [ref](https://redis.io/commands)
+1. Force trigger rdb - `BGSAVE`
+2. Force trigger AOF rewrite - `BGREWRITEAOF`
+3. Find biggest objects in redis - `./redis-cli --bigkeys`
+4. Memory management cmds - `MEMORY DOCTOR, MEMORY STATS`
+5. Generate memory reports using `rdbtools` - [ref](https://github.com/sripathikrishnan/redis-rdb-tools#generate-memory-report) 
+
 ## Misc
 1. Backup data from AWS ElastiCache
     * Create backup of your ElastiCache.

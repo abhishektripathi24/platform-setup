@@ -40,7 +40,6 @@ Installation of `Grafana 6.6.2` on `Ubuntu 18.04.3 LTS` - [ref](https://grafana.
         # Log web requests
         router_logging = true
         ```
-    
     * Ldap configuration - [ref](https://grafana.com/docs/grafana/latest/auth/ldap/)
         * Update `conf/custom.ini`
             ```bash

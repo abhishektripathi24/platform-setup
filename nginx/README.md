@@ -25,6 +25,11 @@ Installation of `NGINX 1.14.0` on `Ubuntu 18.04.3 LTS` - [ref](https://www.nginx
     sudo systemctl enable nginx
     ``` 
 
+3. Remove `default` from `sites-enabled` to allow reverse proxy and lb configs to take over nginx's webserver
+    ```bash
+    sudo rm /etc/nginx/sites-enabled/default
+    ```
+
 ## General Info
 1. There are 4 top level directives - `event`, `http`, `mail`, `stream` - [ref](https://docs.nginx.com/nginx/admin-guide/basic-functionality/managing-configuration-files/#contexts)
 2. For `HTTP load balancing` and `HTTP reverse proxy`, the configs should be resolved into `http { }` block inside the main `nginx.conf`, which should mostly already be present. Also, the following paths are already included inside http block: `include /etc/nginx/conf.d/*.conf;` and `include /etc/nginx/sites-enabled/*;` - [ref](https://docs.nginx.com/nginx/admin-guide/load-balancer/http-load-balancer/) 
