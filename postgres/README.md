@@ -154,6 +154,86 @@ NOTE: For setting up streaming replication and production grade configuration, r
     SELECT pg_size_pretty(pg_total_relation_size('tablename'));
     ```
 
+3. Remove specific version if multiple versions installed
+    ```bash
+    # List and verify components to be removed
+    dpkg -l | grep postgres
+ 
+    ii  pgdg-keyring                          2018.2                                          all          keyring for apt.postgresql.org
+    ii  postgresql-10                         10.12-2.pgdg18.04+1                             amd64        object-relational SQL database, version 10 server
+    ii  postgresql-12                         12.2-2.pgdg18.04+1                              amd64        object-relational SQL database, version 12 server
+    ii  postgresql-12-postgis-3               3.0.1+dfsg-2.pgdg18.04+1                        amd64        Geographic objects support for PostgreSQL 12
+    ii  postgresql-12-postgis-3-scripts       3.0.1+dfsg-2.pgdg18.04+1                        all          Geographic objects support for PostgreSQL 12 -- SQL scripts
+    ii  postgresql-client-10                  10.12-2.pgdg18.04+1                             amd64        front-end programs for PostgreSQL 10
+    ii  postgresql-client-12                  12.2-2.pgdg18.04+1                              amd64        front-end programs for PostgreSQL 12
+    ii  postgresql-client-common              213.pgdg18.04+1                                 all          manager for multiple PostgreSQL client versions
+    ii  postgresql-common                     213.pgdg18.04+1                                 all          PostgreSQL database-cluster manager
+ 
+    # Delete pg 12
+    sudo apt-get --purge remove postgresql-12 postgresql-12-postgis-3 postgresql-12-postgis-3-scripts postgresql-client-12
+    
+    # Verify residuals
+    dpkg -l | grep postgres
+ 
+    ii  pgdg-keyring                          2018.2                                          all          keyring for apt.postgresql.org
+    ii  postgresql-10                         10.12-2.pgdg18.04+1                             amd64        object-relational SQL database, version 10 server
+    ii  postgresql-client-10                  10.12-2.pgdg18.04+1                             amd64        front-end programs for PostgreSQL 10
+    ii  postgresql-client-common              213.pgdg18.04+1                                 all          manager for multiple PostgreSQL client versions
+    ii  postgresql-common                     213.pgdg18.04+1                                 all          PostgreSQL database-cluster manager
+    ```
+    
+## Misc
+1. Install postgis extension - [ref1](https://postgis.net/install/), [ref2](https://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS24UbuntuPGSQL10Apt)
+    ```bash
+    # list available versions
+    sudo apt-cache policy postgis
+       # |- sample output
+        postgis:
+          Installed: (none)
+          Candidate: 3.0.1+dfsg-2.pgdg18.04+1
+          Version table:
+             3.0.1+dfsg-2.pgdg18.04+1 500
+                500 http://apt.postgresql.org/pub/repos/apt bionic-pgdg/main amd64 Packages
+             2.4.3+dfsg-4 500
+                500 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
+    
+    # install default version
+    sudo apt install postgis --no-install-recommends
+       # |- sample output
+       postgis:
+         Installed: 3.0.1+dfsg-2.pgdg18.04+1
+         Candidate: 3.0.1+dfsg-2.pgdg18.04+1
+         Version table:
+        *** 3.0.1+dfsg-2.pgdg18.04+1 500
+               500 http://apt.postgresql.org/pub/repos/apt bionic-pgdg/main amd64 Packages
+               100 /var/lib/dpkg/status
+            2.4.3+dfsg-4 500
+               500 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
+    
+    # if you'd prefer to install a specific version where 2.4.3+dfsg-4 replace with your desired version from cache policy list
+    sudo apt install postgis=2.4.3+dfsg-4  --no-install-recommends
+    
+    # install scripts 
+    sudo apt install postgresql-10-postgis-scripts
+    # otherwise you'll get following error
+    # create extension postgis;
+    # ERROR:  could not open extension control file "/usr/share/postgresql/10/extension/postgis.control": No such file or directory
+    
+    # Finally create extension in a db or schema
+    CREATE EXTENSION postgis;
+    # or 
+    CREATE EXTENSION postgis SCHEMA <schema-name>;
+ 
+    e.g.
+    test=# CREATE EXTENSION postgis;
+    CREATE EXTENSION
+    test=# SELECT PostGIS_version();
+                postgis_version
+    ---------------------------------------
+     2.4 USE_GEOS=1 USE_PROJ=1 USE_STATS=1
+    (1 row)
+    ```
+
 ## Monitoring
 1. Basic monitoring - [Telegraf](https://docs.influxdata.com/telegraf/v1.13/)
     * Installation -
