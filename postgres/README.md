@@ -182,7 +182,7 @@ NOTE: For setting up streaming replication and production grade configuration, r
 ## Misc
 1. Install postgis extension - [ref1](https://postgis.net/install/), [ref2](https://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS24UbuntuPGSQL10Apt)
     ```bash
-    # list available versions
+    # List available versions
     sudo apt-cache policy postgis
        # |- sample output
         postgis:
@@ -194,7 +194,7 @@ NOTE: For setting up streaming replication and production grade configuration, r
              2.4.3+dfsg-4 500
                 500 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
     
-    # install default version
+    # Install default version
     sudo apt install postgis --no-install-recommends
        # |- sample output
        postgis:
@@ -207,12 +207,12 @@ NOTE: For setting up streaming replication and production grade configuration, r
             2.4.3+dfsg-4 500
                500 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
     
-    # if you'd prefer to install a specific version where 2.4.3+dfsg-4 replace with your desired version from cache policy list
+    # If you'd prefer to install a specific version where 2.4.3+dfsg-4 replace with your desired version from cache policy list
     sudo apt install postgis=2.4.3+dfsg-4  --no-install-recommends
     
-    # install scripts 
+    # Install scripts 
     sudo apt install postgresql-10-postgis-scripts
-    # otherwise you'll get following error
+    # Otherwise you'll get following error
     # create extension postgis;
     # ERROR:  could not open extension control file "/usr/share/postgresql/10/extension/postgis.control": No such file or directory
     

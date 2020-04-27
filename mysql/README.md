@@ -31,10 +31,10 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         ```
     * Enable root user's login by changing root user's auth plugin through mysql safe mode
         ```bash
-        # first stop existing mysql process
+        # First stop existing mysql process
         sudo systemctl stop mysql.service
         
-        # start msyqld in safe mode and update the auth plugin for root from `auth_socket` to `mysql_native_password`
+        # Start msyqld in safe mode and update the auth plugin for root from `auth_socket` to `mysql_native_password`
         sudo su 
         mkdir -p /var/run/mysqld
         chown mysql:mysql /var/run/mysqld
@@ -47,12 +47,12 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         FLUSH PRIVILEGES;
         quit;
     
-        # stop mysqld process and restart mysql service
+        # Stop mysqld process and restart mysql service
         ps -ef | grep mysql
         sudo kill -9 <pid of mysqld_safe --skip-grant-tables> <pid of /usr/sbin/mysqld --basedir=/usr...>   
         sudo systemctl start mysql
         
-        # login to mysql shell from localhost
+        # Login to mysql shell from localhost
         mysql -uroot -proot 
         ```
     * Change data directory location to separate volume
@@ -98,7 +98,7 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         ```
     *  Allow remote login for root user:
         ```bash
-        # login to mysql shell from server's localhost
+        # Login to mysql shell from server's localhost
         mysql -uroot -proot
         use mysql; 
         GRANT ALL ON *.* TO 'root'@'%' identified by 'root';
@@ -379,12 +379,12 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
 
 3. Grants dump and restore
     ```bash
-    # install package
+    # Install package
     sudo apt install percona-toolkit 
  
-    # dump grants
+    # Dump grants
     pt-show-grants --host <hostname> --user 'username' --password 'password' --ignore root@'%','mysql.session'@'localhost',rdsadmin@localhost,'rdsrepladmin'@'%' > grants.sql
     
-    # restore grants
+    # Restore grants
     mysql -uroot -proot mysql < grants.sql 
     ```

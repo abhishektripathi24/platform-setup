@@ -72,7 +72,7 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
     # Set this API key to enable Mapbox visualizations
     MAPBOX_API_KEY = ''
     
-    # assuming org-name: blueleaf
+    # Assuming org-name: blueleaf
     from flask_appbuilder.security.manager import AUTH_LDAP
     AUTH_TYPE = AUTH_LDAP
     AUTH_LDAP_SERVER = "ldap://<ip/hostname>:389"

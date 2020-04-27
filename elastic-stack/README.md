@@ -68,7 +68,7 @@ From the official docs -
     elasticsearch.hosts: ["http://localhost:9200"]
     logging.dest: /var/log/kibana/kibana.log
  
-    # security settings (optional)
+    # Security settings (optional)
     console.enabled: false
     map.includeElasticMapsService: false
     uiSettings.overrides.defaultRoute: /app/kibana#/dashboards
