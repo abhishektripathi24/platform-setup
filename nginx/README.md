@@ -14,18 +14,16 @@ Installation of `NGINX 1.14.0` on `Ubuntu 18.04.3 LTS` - [ref](https://www.nginx
 1. Install NGINX
     ```bash
     sudo apt update
-    sudo apt install nginx 
-    ```
-
-2. Verify installation and enable (autorun the process) upon os reboots
-    ```bash
+    sudo apt install nginx
+   
+    # Verify installation  
     sudo systemctl stop nginx
     sudo systemctl start nginx
     sudo systemctl status nginx
     sudo systemctl enable nginx
-    ``` 
-
-3. Remove `default` from `sites-enabled` to allow reverse proxy and lb configs to take over nginx's webserver
+    ```
+    
+2. Remove `default` from `sites-enabled` to allow reverse proxy and lb configs to take over nginx's webserver
     ```bash
     sudo rm /etc/nginx/sites-enabled/default
     ```
