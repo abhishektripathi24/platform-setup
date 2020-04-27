@@ -16,36 +16,33 @@ Installation of `PostgreSQL 10` on `Ubuntu 18.04.3 LTS` - [ref](https://www.post
     wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
     sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -sc)-pgdg main" > /etc/apt/sources.list.d/PostgreSQL.list'
     sudo apt update
-    sudo apt-get install postgresql-10 
-    ```
-
-2. Verify installation
-    ```bash
+    sudo apt-get install postgresql-10
+   
+    # Verify installation 
     sudo systemctl stop postgresql.service
     sudo systemctl start postgresql.service
     sudo systemctl enable postgresql.service
     sudo systemctl status postgresql.service
-    ``` 
+    ```
 
-3. Login and change postgres user password
+2. Login and change postgres user password
     ```bash
     sudo su postgres
     psql -U postgres
     ALTER USER postgres WITH PASSWORD 'postgres';
     ```
 
-4. Update `/etc/postgresql/10/main/postgresql.conf` to allow remote connections -
+3. Update `/etc/postgresql/10/main/postgresql.conf` to allow remote connections -
     ```bash
     listen_addresses = '*'
     ```
     
-5. Update `/etc/postgresql/10/main/pg_hba.conf` to allow remote authentication -
+4. Update `/etc/postgresql/10/main/pg_hba.conf` to allow remote authentication -
     ```bash
     # TYPE     DATABASE        USER            ADDRESS METHOD        AUTH_METHOD
     host       all             all             all                   md5
     ```
 NOTE: For setting up streaming replication and production grade configuration, refer following [timescale's documentation](../timescale/README.md).
-
 
 ## Administration
 1. User Management - [[pg-docs-create-user](https://www.postgresql.org/docs/12/sql-createuser.html), [pg-docs-grant](https://www.postgresql.org/docs/12/sql-grant.html), [AWS](https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/), [Blog](https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html)]
@@ -233,6 +230,35 @@ NOTE: For setting up streaming replication and production grade configuration, r
      2.4 USE_GEOS=1 USE_PROJ=1 USE_STATS=1
     (1 row)
     ```
+
+2. Install `wal2json` - a logical decoding plugin - [ref1](https://github.com/eulerto/wal2json), [ref2](https://www.ubuntuupdates.org/package/postgresql/bionic-pgdg/main/base/postgresql-10-wal2json) 
+    ```bash
+    sudo apt-get install postgresql-10-wal2json
+    ```
+
+3. Logical replication slots with `wal2json` as the logical decoding plugin 
+    * Configure server to use wal2json along with replication settings in `/etc/postgresql/10/main/postgresql.conf`
+        ```bash
+        # MODULES
+        shared_preload_libraries = 'wal2json'
+         
+        # REPLICATION
+        wal_level = logical             
+        max_wal_senders = 1             
+        max_replication_slots = 1
+        ```       
+    * Update `pg_hba.conf` to the following for authenticating `myuser` to use `mydatabase`
+        ```bash
+        local     mydatabase      myuser      trust
+        ```
+    * Create/delete slot - [ref](https://www.postgresql.org/docs/10/logicaldecoding-example.html)
+        ```bash
+        # Create slot
+        pg_recvlogical -d <database> --slot <slot-name> --create-slot -P wal2json
+     
+        # Delete slot
+        select pg_drop_replication_slot('<slot-name>');
+        ```
 
 ## Monitoring
 1. Basic monitoring - [Telegraf](https://docs.influxdata.com/telegraf/v1.13/)

@@ -16,9 +16,7 @@ Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [re
     * Follow the documentation for master setup: https://docs.timescale.com/v1.1/getting-started/setup
 
 2. Setup streaming replication - Slave: https://docs.timescale.com/v1.1/tutorials/replication
-    
     * Steps to configure the *Primary Database* -
-        
         1. Configure the Primary Database
             ```postgresql
             SET password_encryption = 'scram-sha-256';
@@ -58,7 +56,6 @@ Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [re
             ```
 
     * Steps to configure the *Replica Database*:
-    
         1. Create a base backup on replica
             ```bash
             rm -rf <DATA_DIRECTORY>/*
@@ -85,7 +82,6 @@ Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [re
             ```
         4. Restart PostgreSQL
         
-
 ## Misc
 1. Delete wals on master node which are older than n days: [n=5]
     ```bash
