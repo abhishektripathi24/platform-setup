@@ -12,10 +12,10 @@ From the official docs -
 Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [ref](https://docs.timescale.com/v1.1/getting-started/installation/ubuntu/installation-apt-ubuntu)
 
 1. Setup - Master
-    * Follow the documentation for single node installation: https://docs.timescale.com/v1.1/getting-started/installation/ubuntu/installation-apt-ubuntu
-    * Follow the documentation for master setup: https://docs.timescale.com/v1.1/getting-started/setup
+    * Follow the documentation for single node installation - [ref](https://docs.timescale.com/v1.1/getting-started/installation/ubuntu/installation-apt-ubuntu)
+    * Follow the documentation for master setup - [ref](https://docs.timescale.com/v1.1/getting-started/setup)
 
-2. Setup streaming replication - Slave: https://docs.timescale.com/v1.1/tutorials/replication
+2. Setup streaming replication - Slave: [ref](https://docs.timescale.com/v1.1/tutorials/replication)
     * Steps to configure the *Primary Database* -
         1. Configure the Primary Database
             ```postgresql
@@ -38,30 +38,31 @@ Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [re
                 archive_mode = on
                 archive_command = 'cp %p /data/postgresql/postgresql/10/main/pg_wal_archive/%f'
             ```
-        3. Restart postgreSQL
+        3. Create replication slot for each replica through psql shell
+            ```postgresql
+            SELECT * FROM pg_create_physical_replication_slot('replica_1_slot');
+            ```
+        4. Configure Host Based Authentication
+            ```bash
+            vim /etc/postgresql/10/main/pg_hba.conf
+            >   host replication repuser <hostname>or<ip/32> scram-sha-256
+            vim /etc/hosts
+            >  <ip> <hostname>
+            ```
+        5. Restart postgreSQL
             ```bash
             sudo systemctl restart postgresql # or
             sudo service postgresql restart
             ```
-        4. Create replication slot for each replica through psql shell
-            ```postgresql
-            SELECT * FROM pg_create_physical_replication_slot('replica_1_slot');
-            ```
-        5. Configure Host Based Authentication
-            ```bash
-            vim /etc/postgresql/10/main/pg_hba.conf
-            >   host replication repuser <hostname> scram-sha-256
-            vim /etc/hosts
-            >  <ip> <hostname>
-            ```
 
     * Steps to configure the *Replica Database*:
-        1. Create a base backup on replica
+        1. Stop postgres and create a base backup on replica
             ```bash
+            sudo systemctl stop postgresql
             rm -rf <DATA_DIRECTORY>/*
             pg_basebackup -h <PRIMARY_IP> -D <DATA_DIRECTORY> -U repuser -vP -W
             ```
-        2. Create a recovery.conf file in data directory
+        2. When the backup is finished and the replica has data from master, create a recovery.conf file in data directory
             ```bash
             touch <DATA_DIRECTORY>/recovery.conf
             chmod 0600 <DATA_DIRECTORY>/recovery.conf
