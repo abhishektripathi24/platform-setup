@@ -64,6 +64,59 @@ From the official docs -
         sudo mount -a
         df -h
         ```
+    * Extent volume
+        ```bash
+        # 1. If the volume has a partition, extend it first
+        [ec2-user ~]$ lsblk
+        NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+        nvme1n1       259:0    0  30G  0 disk /data
+        nvme0n1       259:1    0  16G  0 disk
+        └─nvme0n1p1   259:2    0   8G  0 part /
+        └─nvme0n1p128 259:3    0   1M  0 part
+
+        ---
+        sudo growpart /dev/nvme0n1 1
+        ---
+  
+        # Sample output
+        [ec2-user ~]$ lsblk
+        NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+        nvme1n1       259:0    0  30G  0 disk /data
+        nvme0n1       259:1    0  16G  0 disk
+        └─nvme0n1p1   259:2    0  16G  0 part /
+        └─nvme0n1p128 259:3    0   1M  0 part
+
+
+        # 2.1. Extend the file system
+        [ec2-user ~]$ df -h
+        Filesystem       Size  Used Avail Use% Mounted on
+        /dev/xvda1       8.0G  1.9G  6.2G  24% /
+        /dev/xvdf1       8.0G   45M  8.0G   1% /data
+        
+        ---
+        sudo resize2fs /dev/xvda1
+        ---
+        
+        [ec2-user ~]$ df -h
+        Filesystem       Size  Used Avail Use% Mounted on
+        /dev/xvda1        16G  1.9G  14G  12% /
+        /dev/xvdf1        30G   45M  30G   1% /data
+
+        # 2.2 Extend an XFS file system
+        [ec2-user ~]$ df -h
+        Filesystem       Size  Used Avail Use% Mounted on
+        /dev/nvme0n1p1   8.0G  1.6G  6.5G  20% /
+        /dev/nvme1n1     8.0G   33M  8.0G   1% /data
+
+        ---
+        sudo xfs_growfs -d /
+        sudo xfs_growfs -d /data
+
+        # If above command fails, install the XFS tools as it's not installed
+        sudo yum install xfsprogs 
+        ---
+  
+        ```
 
 3. Host configuration
     ```bash
@@ -103,27 +156,36 @@ From the official docs -
 
 9. List all connected client's IPs, group by count - `netstat -tn 2>/dev/null | grep :80 | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr | head`
 
-10. Configure DNS nameservers on `Ubuntu 18.04.3 LTS` via `Netplan - the default network management tool on Ubuntu 18.04.` - [ref](https://linuxize.com/post/how-to-set-dns-nameservers-on-ubuntu-18-04/)
-    ```bash
-    # Check current nameservers
-    sudo systemd-resolve --status | grep 'DNS Servers' -A2
-    
-    # Netplan configuration files are stored in the /etc/netplan directory
-    sudo vim /etc/netplan/01-netcfg.yaml
-    
-    # Update nameservers
-    nameservers:
-       addresses: [1.1.1.1, 1.0.0.1]
-    
-    # Apply changes
-    sudo netplan apply
-    
-    # verify that the new DNS resolvers are set
-    sudo systemd-resolve --status | grep 'DNS Servers' -A5
-    or cat /run/systemd/resolve/resolv.conf
-    or cat /run/systemd/resolve/stub-resolv.conf
-    or cat /etc/resolv.conf
-    ```
+10. Configure DNS nameservers on `Ubuntu 18.04.3 LTS`
+    * `Netplan` - the default network management tool on Ubuntu 18.04. - [ref](https://linuxize.com/post/how-to-set-dns-nameservers-on-ubuntu-18-04/)
+        ```bash
+        # Check current nameservers
+        sudo systemd-resolve --status | grep 'DNS Servers' -A2
+        
+        # Netplan configuration files are stored in the /etc/netplan directory
+        sudo vim /etc/netplan/01-netcfg.yaml
+          nameservers:
+            addresses: [1.1.1.1, 1.0.0.1]
+        
+        # Apply changes
+        sudo netplan apply
+        
+        # Verify that the new DNS resolvers are set
+        sudo systemd-resolve --status | grep 'DNS Servers' -A5
+        or cat /run/systemd/resolve/resolv.conf
+        or cat /run/systemd/resolve/stub-resolv.conf
+        or cat /etc/resolv.conf
+        ```
+    * `Resolved.conf`
+        ```bash
+        # Update DNS in resolved.conf
+        vim /etc/systemd/resolved.conf
+           DNS=10.11.18.58 10.11.18.59 10.11.18.60
+        
+        # Apply changes
+        systemctl daemon-reload
+        systemctl restart systemd-resolved
+        ```
 
 11. Debug network problems
     * Monitor incoming packets using `tcpdump` - [ref](https://www.tecmint.com/12-tcpdump-commands-a-network-sniffer-tool/)
