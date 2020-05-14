@@ -127,6 +127,10 @@ NOTE: For setting up streaming replication and production grade configuration, r
     GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO airflow;
     GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO airflow;
     GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO airflow;
+    --- The remaning ones are needed to extend permission of user airflow for future objects created by any user
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO airflow;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO airflow;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO airflow;
  
     2. Make this role/user as the owner of the tables (if any), from postgres to airflow
     ALTER TABLE table_name OWNER TO airflow;
@@ -140,18 +144,58 @@ NOTE: For setting up streaming replication and production grade configuration, r
     REASSIGN OWNED BY airflow to postgres;
     DROP OWNED BY airflow;
     DROP ROLE airflow;
- 
+    
     -- Misc
-    ALTER ROLE name RENAME TO new_name;   
+    ALTER ROLE name RENAME TO new_name;
+    ALTER ROLE postgres WITH PASSWORD 'postgres';
     ``` 
 
-2. Database and Table size
+2. Dump and restore
+    ```bash
+    # --- 1. Table ---
+        # Dump 1 table
+        pg_dump -h <hostname> -p 5432 -U <username> -d <db-name> -t <schema>.<table-name> > table.sql
+     
+        # Restore 1 table
+        psql -h <hostname> -p 5432 -U <username> -d <db-name> -n <schema-name> < table.sql
+ 
+    # --- 2. Database ---
+        # Dump 1 db
+        pg_dump -h <hostname> -p 5432 -U <username> -d <db-name> > db.sql
+        
+        # Restore 1 db
+        psql -h <hostname> -p 5432 -U <username> -d <db-name> < db.sql
+        
+        # Dump all dbs
+        pg_dumpall -h <hostname> -p 5432 -U <username> > dbs.sql
+        
+        # Restore all dbs
+        psql -h <hostname> -p 5432 -U <username> < dbs.sql
+    ```
+
+3. Database and Table size
     ```bash
     SELECT pg_size_pretty(pg_database_size('dbname'));
     SELECT pg_size_pretty(pg_total_relation_size('tablename'));
     ```
 
-3. Remove specific version if multiple versions installed
+4. Drop database by terminating connections
+    ```bash
+    # Making sure the database exists
+    SELECT * from pg_database where datname = 'my_database_name'
+    
+    # Disallow new connections
+    UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'my_database_name';
+    ALTER DATABASE my_database_name CONNECTION LIMIT 1;
+    
+    # Terminate existing connections
+    SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'my_database_name';
+    
+    # Drop database
+    DROP DATABASE my_database_name
+    ```
+
+5. Remove specific version if multiple versions installed
     ```bash
     # List and verify components to be removed
     dpkg -l | grep postgres
