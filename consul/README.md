@@ -113,6 +113,11 @@ Installation of `Consul v1.7.2` on `Ubuntu 18.04.3 LTS` - [ref](https://learn.ha
     e.g. dig +short @10.11.18.60 -p 8600 oauth-service-stg.service.consul
     ```
 
+4. Force leave consul client from cluster
+    ```bash
+    consul force-leave <node-id>
+    ```
+
 <br/>
 
 ## Setup DNS Forwarding  

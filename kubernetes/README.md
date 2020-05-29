@@ -588,8 +588,7 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         curl https://<registry-server-ip>:8080/v2/_catalog
         
         # List tags of a repository
-        curl https://<registry-server-ip>:8080/v2/<repo-name>/tags/list
-  
+        curl https://<registry-server-ip>:8080/v2/<repo-name>/tags/list  
         ```  
 
 ## Administration
