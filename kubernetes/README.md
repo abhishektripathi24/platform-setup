@@ -589,6 +589,14 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         
         # List tags of a repository
         curl https://<registry-server-ip>:8080/v2/<repo-name>/tags/list  
+        ```
+    * Delete repositories and tags of the images
+        ```bash
+        # Remove the repository or the manifests/tags to be deleted
+        Removed dir /var/lib/registry/docker/registry/v2/repositories/[name]/_manifests/tags/[associatedTags]
+  
+        # Run the garbage collector to delete the images accordingly
+        docker exec -it registry bin/registry garbage-collect /etc/docker/registry/config.yml -m
         ```  
 
 ## Administration

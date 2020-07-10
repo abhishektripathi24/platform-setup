@@ -48,3 +48,4 @@ Installation of `Schema Registry via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - 
  
  ## References
  * https://docs.confluent.io/current/schema-registry/schema_registry_tutorial.html
+ * https://docs.confluent.io/current/schema-registry/develop/api.html
