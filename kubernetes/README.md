@@ -258,6 +258,10 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         ```bash
         kubectl edit deployment kubernetes-dashboard -n kubernetes-dashboard 
         ```
+    * Update certs in future 
+        ```bash
+        kubectl create secret tls kubernetes-dashboard-certs --key="/home/ubuntu/certs/stg.key" --cert="/home/ubuntu/certs/stg.crt" -n kubernetes-dashboard --dry-run -o yaml | kubectl apply -f -
+        ```
     * Create admin user - [ref](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
         ```bash
         apiVersion: v1
@@ -561,6 +565,7 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
           -e REGISTRY_HTTP_TLS_KEY=/certs/domain.key \
           -p 8080:443 \
           registry:2
+        # Note: The domain.crt will be a full chain of certs
         ```
     * Basic usage - [ref](https://docs.docker.com/registry/)
         ```bash
@@ -590,7 +595,7 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         # List tags of a repository
         curl https://<registry-server-ip>:8080/v2/<repo-name>/tags/list  
         ```
-    * Delete repositories and tags of the images
+    * Delete repositories and tags of the images in the registry
         ```bash
         # Remove the repository or the manifests/tags to be deleted
         Removed dir /var/lib/registry/docker/registry/v2/repositories/[name]/_manifests/tags/[associatedTags]
@@ -598,6 +603,14 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         # Run the garbage collector to delete the images accordingly
         docker exec -it registry bin/registry garbage-collect /etc/docker/registry/config.yml -m
         ```  
+    * Update registry certs
+        ```bash
+        # Copy certs from host to registry container (Assuming certs directory contains following two files: domain.crt, domain.key)
+        sudo docker cp /path/to/certs/on/host registry:/certs
+        
+        # Restart the container
+        sudo docker restart registry
+        ```
 
 ## Administration
 1. Enable kubectl autocompletion
