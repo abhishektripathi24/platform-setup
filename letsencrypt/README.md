@@ -91,10 +91,10 @@ Steps to get a `wildcard certificate` for NGINX-Ubuntu 18.04.3 LTS combo from le
 
 6. Automatic renewal
     ```bash
-    sudo certbot renew
+    sudo certbot renew --non-interactive --dns-route53 --post-hook "sudo service nginx reload"
     ``` 
     Note: use `--dry-run` flag for testing.
-        
+    
     Sample output:
     ```bash
     ubuntu@ip-10-8-69-215:~$ sudo certbot renew --dry-run
