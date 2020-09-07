@@ -262,6 +262,20 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         ```bash
         kubectl create secret tls kubernetes-dashboard-certs --key="/home/ubuntu/certs/stg.key" --cert="/home/ubuntu/certs/stg.crt" -n kubernetes-dashboard --dry-run -o yaml | kubectl apply -f -
         ```
+    * Add metrics-server to enable CPU/memory graphs - [ref](https://github.com/kubernetes-sigs/metrics-server)
+        ```bash
+        kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.3.7/components.yaml
+        ``` 
+    * Edit metrics-server deployment to add following under `.spec.template.spec.containers.args`
+        ```bash
+        kubectl edit deployments.apps -n kube-system metrics-server
+          - --kubelet-insecure-tls
+          - --kubelet-preferred-address-types=InternalIP
+ 
+        Otherwise there will be following errors if you try to access the logs for the metrics-server using `kubectl logs -n kube-system metrics-server-749b7b675d-xpkcj` - 
+        Unable to fetch pod metrics for pod <namespace_name>/<pod_name> message.
+        You will also get the error message error: Metrics not available for pod <namespace_name>/<pod_name> if you query kubectl top pod from the command line.
+        ```
     * Create admin user - [ref](https://github.com/kubernetes/dashboard/blob/master/docs/user/access-control/creating-sample-user.md)
         ```bash
         apiVersion: v1
@@ -533,23 +547,27 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
             calico-node-pmbcp                             1/1     Running   2          26h
             coredns-66bff467f8-cr792                      1/1     Running   5          26h
             coredns-66bff467f8-x6dmj                      1/1     Running   5          26h
-            etcd-k8s-master                      1/1     Running   5          26h
-            kube-apiserver-k8s-master            1/1     Running   6          26h
-            kube-controller-manager-k8s-master   1/1     Running   5          26h
+            etcd-k8s-master                               1/1     Running   5          26h
+            kube-apiserver-k8s-master                     1/1     Running   6          26h
+            kube-controller-manager-k8s-master            1/1     Running   5          26h
             kube-proxy-98jjz                              1/1     Running   5          26h
             kube-proxy-f2nfl                              1/1     Running   2          26h
             kube-proxy-tbbhc                              1/1     Running   2          26h
-            kube-scheduler-k8s-master            1/1     Running   5          26h
+            kube-scheduler-k8s-master                     1/1     Running   5          26h
             tiller-deploy-d47d5858d-6j6np                 1/1     Running   0          55s
             ``` 
-    * Create `serviceaccount` for tiller
-        ```bash
-        kubectl create serviceaccount -n kube-system tiller
-        kubectl create clusterrolebinding tiller-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
-        
-        # Otherwise following error will popup
-        Error: configmaps is forbidden: User "system:serviceaccount:kube-system:default" cannot list resource "configmaps" in API group "" in the namespace "kube-system"
-        ```
+        * Create `serviceaccount` 
+            ```bash
+            kubectl create serviceaccount -n kube-system tiller
+            ```
+        * Create a `clusterrolebinding`
+            ```bash
+            kubectl create clusterrolebinding tiller-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+            ```
+        * Deploy a patch and add the line `serviceAccount: tiller` to `spec.template.spec`
+            ```bash
+            kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+            ```
 
 ## Misc
 1. Local docker registry
@@ -756,3 +774,5 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
     * https://kubernetes.github.io/ingress-nginx/user-guide/tls/
 * Disaster recovery
     * https://medium.com/velotio-perspectives/the-ultimate-guide-to-disaster-recovery-for-your-kubernetes-clusters-94143fcc8c1e
+* Kubernetes Monitoring in Production
+    * https://www.replex.io/blog/kubernetes-in-production-the-ultimate-guide-to-monitoring-resource-metrics
