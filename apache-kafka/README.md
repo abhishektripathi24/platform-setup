@@ -72,15 +72,24 @@ Installation of `Apache Kafka 2.4.0` on `Ubuntu 18.04.3 LTS` - [ref](https://kaf
  
  7. If your linux distro supports systemd, you can supervise kafka process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
  
- ## Usage
-* <strong>Create topic:</strong> ./bin/kafka-topics.sh --create --zookeeper localhost:2181/kafka --replication-factor 1 --partitions 1 --topic test
-* <strong>List topic:</strong> ./bin/kafka-topics.sh --list --zookeeper localhost:2181/kafka
-* <strong>Describe topic:</strong> ./bin/kafka-topics.sh --zookeeper localhost:2181/kafka --describe --topic topic-name
-* <strong>Delete topic:</strong> ./bin/kafka-topics.sh --zookeeper localhost:2181/kafka --delete --topic topic-name
-* <strong>Get size of topic:</strong> ./bin/kafka-log-dirs  --bootstrap-server localhost:9092  --topic-list topic-name --describe  | grep '^{' | jq '[ ..|.size? | numbers ] | add'
-* <strong>Console producer:</strong> ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic test
-* <strong>Console consumer:</strong> ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning
+## Usage
+* Topic
+    * <strong>Create topic:</strong> ./bin/kafka-topics.sh --create --zookeeper localhost:2181/kafka --replication-factor 1 --partitions 1 --topic topic-name
+    * <strong>List topic:</strong> ./bin/kafka-topics.sh --list --zookeeper localhost:2181/kafka
+    * <strong>Describe topic:</strong> ./bin/kafka-topics.sh --zookeeper localhost:2181/kafka --describe --topic topic-name
+    * <strong>Delete topic:</strong> ./bin/kafka-topics.sh --zookeeper localhost:2181/kafka --delete --topic topic-name
+    * <strong>Get size of topic:</strong> ./bin/kafka-log-dirs  --bootstrap-server localhost:9092  --topic-list topic-name --describe  | grep '^{' | jq '[ ..|.size? | numbers ] | add'
+* Producer
+    * <strong>Console producer without key:</strong> ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic-name
+    * <strong>Console producer with key:</strong> ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic-name --property "parse.key=true" --property "key.separator=:"
+* Consumer
+    * <strong>Console consumer with key:</strong> ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name --from-beginning --property print.key=true
+    * <strong>Avro Console consumer without key:</strong> ./bin/kafka-avro-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name --from-beginning --property schema.registry.url="http://localhost:8081"
+    * <strong>Avro Console consumer with key as avro:</strong> ./bin/kafka-avro-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name --from-beginning --property schema.registry.url="http://localhost:8081" --property print.key=true
+    * <strong>Avro Console consumer with key as string:</strong> ./bin/kafka-avro-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name --from-beginning --property schema.registry.url="http://localhost:8081" --property print.key=true --key-deserializer=org.apache.kafka.common.serialization.StringDeserializer 
+* Consumer-group
+    * <strong>Describe consumer group:</strong> ./bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group consumer-group-name
  
- ## References
- * https://kafka.apache.org/quickstart
- * https://ronnieroller.com/kafka/cheat-sheet
+## References
+* https://kafka.apache.org/quickstart
+* https://ronnieroller.com/kafka/cheat-sheet
