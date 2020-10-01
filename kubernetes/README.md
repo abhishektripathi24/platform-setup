@@ -594,13 +594,13 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         docker pull ubuntu
   
         # Tag the image so that it points to your registry
-        docker image tag ubuntu localhost:5000/myfirstimage
+        docker image tag ubuntu:latest localhost:5000/myfirstimage:mytag
   
         # Push it
-        docker push localhost:5000/myfirstimage
+        docker push localhost:5000/myfirstimage:mytag
   
         # Pull it back
-        docker pull localhost:5000/myfirstimage
+        docker pull localhost:5000/myfirstimage:mytag
   
         # Now stop your registry and remove all data
         docker container stop registry && docker container rm -v registry

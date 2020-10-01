@@ -1,0 +1,18 @@
+[Unit]
+Description=Neo4j Graph Database
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=forking
+User=root
+Group=root
+Environment="INEO_HOME=/data/neo4j-data" "PATH=/data/neo4j-data/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin"
+ExecStart=/data/neo4j-data/bin/ineo start -q
+ExecReload=/bin/bash -c '/data/neo4j-data/bin/ineo restart -q'
+LimitNOFILE=40000
+TimeoutStopSec=20
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
