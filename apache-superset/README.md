@@ -134,9 +134,6 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
 
 8. If your linux distro supports systemd, you can supervise superset process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
-## References
-* https://github.com/instacart/superset/blob/master/docs/installation.rst
-
 ## Errors
 * Run `pip install werkzeug==0.16.0` for below error:
      ```bash
@@ -166,3 +163,6 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
     
     Error: No such command "fab".
     ```
+    
+## References
+* https://github.com/instacart/superset/blob/master/docs/installation.rst

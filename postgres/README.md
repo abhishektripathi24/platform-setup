@@ -44,6 +44,87 @@ Installation of `PostgreSQL 10` on `Ubuntu 18.04.3 LTS` - [ref](https://www.post
     ```
 NOTE: For setting up streaming replication and production grade configuration, refer following [timescale's documentation](../timescale/README.md).
 
+## Misc
+1. Install postgis extension - [ref1](https://postgis.net/install/), [ref2](https://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS24UbuntuPGSQL10Apt)
+    ```bash
+    # List available versions
+    sudo apt-cache policy postgis
+       # |- sample output
+        postgis:
+          Installed: (none)
+          Candidate: 3.0.1+dfsg-2.pgdg18.04+1
+          Version table:
+             3.0.1+dfsg-2.pgdg18.04+1 500
+                500 http://apt.postgresql.org/pub/repos/apt bionic-pgdg/main amd64 Packages
+             2.4.3+dfsg-4 500
+                500 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
+    
+    # Install default version
+    sudo apt install postgis --no-install-recommends
+       # |- sample output
+       postgis:
+         Installed: 3.0.1+dfsg-2.pgdg18.04+1
+         Candidate: 3.0.1+dfsg-2.pgdg18.04+1
+         Version table:
+        *** 3.0.1+dfsg-2.pgdg18.04+1 500
+               500 http://apt.postgresql.org/pub/repos/apt bionic-pgdg/main amd64 Packages
+               100 /var/lib/dpkg/status
+            2.4.3+dfsg-4 500
+               500 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
+    
+    # If you'd prefer to install a specific version where 2.4.3+dfsg-4 replace with your desired version from cache policy list
+    sudo apt install postgis=2.4.3+dfsg-4  --no-install-recommends
+    
+    # Install scripts 
+    sudo apt install postgresql-10-postgis-scripts
+    # Otherwise you'll get following error
+    # create extension postgis;
+    # ERROR:  could not open extension control file "/usr/share/postgresql/10/extension/postgis.control": No such file or directory
+    
+    # Finally create extension in a db or schema
+    CREATE EXTENSION postgis;
+    # or 
+    CREATE EXTENSION postgis SCHEMA <schema-name>;
+ 
+    e.g.
+    test=# CREATE EXTENSION postgis;
+    CREATE EXTENSION
+    test=# SELECT PostGIS_version();
+                postgis_version
+    ---------------------------------------
+     2.4 USE_GEOS=1 USE_PROJ=1 USE_STATS=1
+    (1 row)
+    ```
+
+2. Install `wal2json` - a logical decoding plugin - [ref1](https://github.com/eulerto/wal2json), [ref2](https://www.ubuntuupdates.org/package/postgresql/bionic-pgdg/main/base/postgresql-10-wal2json) 
+    ```bash
+    sudo apt-get install postgresql-10-wal2json
+    ```
+
+3. Logical replication slots with `wal2json` as the logical decoding plugin 
+    * Configure server to use wal2json along with replication settings in `/etc/postgresql/10/main/postgresql.conf`
+        ```bash
+        # MODULES
+        shared_preload_libraries = 'wal2json'
+         
+        # REPLICATION
+        wal_level = logical             
+        max_wal_senders = 1             
+        max_replication_slots = 1
+        ```       
+    * Update `pg_hba.conf` to the following for authenticating `myuser` to use `mydatabase`
+        ```bash
+        local     mydatabase      myuser      trust
+        ```
+    * Create/delete slot - [ref](https://www.postgresql.org/docs/10/logicaldecoding-example.html)
+        ```bash
+        # Create slot
+        pg_recvlogical -d <database> --slot <slot-name> --create-slot -P wal2json
+     
+        # Delete slot
+        select pg_drop_replication_slot('<slot-name>');
+        ```
+
 ## Administration
 1. User Management - [[pg-docs-create-user](https://www.postgresql.org/docs/12/sql-createuser.html), [pg-docs-grant](https://www.postgresql.org/docs/12/sql-grant.html), [AWS](https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/), [Blog](https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html)]
     ```bash
@@ -222,87 +303,6 @@ NOTE: For setting up streaming replication and production grade configuration, r
     ii  postgresql-client-common              213.pgdg18.04+1                                 all          manager for multiple PostgreSQL client versions
     ii  postgresql-common                     213.pgdg18.04+1                                 all          PostgreSQL database-cluster manager
     ```
-    
-## Misc
-1. Install postgis extension - [ref1](https://postgis.net/install/), [ref2](https://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS24UbuntuPGSQL10Apt)
-    ```bash
-    # List available versions
-    sudo apt-cache policy postgis
-       # |- sample output
-        postgis:
-          Installed: (none)
-          Candidate: 3.0.1+dfsg-2.pgdg18.04+1
-          Version table:
-             3.0.1+dfsg-2.pgdg18.04+1 500
-                500 http://apt.postgresql.org/pub/repos/apt bionic-pgdg/main amd64 Packages
-             2.4.3+dfsg-4 500
-                500 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
-    
-    # Install default version
-    sudo apt install postgis --no-install-recommends
-       # |- sample output
-       postgis:
-         Installed: 3.0.1+dfsg-2.pgdg18.04+1
-         Candidate: 3.0.1+dfsg-2.pgdg18.04+1
-         Version table:
-        *** 3.0.1+dfsg-2.pgdg18.04+1 500
-               500 http://apt.postgresql.org/pub/repos/apt bionic-pgdg/main amd64 Packages
-               100 /var/lib/dpkg/status
-            2.4.3+dfsg-4 500
-               500 http://archive.ubuntu.com/ubuntu bionic/universe amd64 Packages
-    
-    # If you'd prefer to install a specific version where 2.4.3+dfsg-4 replace with your desired version from cache policy list
-    sudo apt install postgis=2.4.3+dfsg-4  --no-install-recommends
-    
-    # Install scripts 
-    sudo apt install postgresql-10-postgis-scripts
-    # Otherwise you'll get following error
-    # create extension postgis;
-    # ERROR:  could not open extension control file "/usr/share/postgresql/10/extension/postgis.control": No such file or directory
-    
-    # Finally create extension in a db or schema
-    CREATE EXTENSION postgis;
-    # or 
-    CREATE EXTENSION postgis SCHEMA <schema-name>;
- 
-    e.g.
-    test=# CREATE EXTENSION postgis;
-    CREATE EXTENSION
-    test=# SELECT PostGIS_version();
-                postgis_version
-    ---------------------------------------
-     2.4 USE_GEOS=1 USE_PROJ=1 USE_STATS=1
-    (1 row)
-    ```
-
-2. Install `wal2json` - a logical decoding plugin - [ref1](https://github.com/eulerto/wal2json), [ref2](https://www.ubuntuupdates.org/package/postgresql/bionic-pgdg/main/base/postgresql-10-wal2json) 
-    ```bash
-    sudo apt-get install postgresql-10-wal2json
-    ```
-
-3. Logical replication slots with `wal2json` as the logical decoding plugin 
-    * Configure server to use wal2json along with replication settings in `/etc/postgresql/10/main/postgresql.conf`
-        ```bash
-        # MODULES
-        shared_preload_libraries = 'wal2json'
-         
-        # REPLICATION
-        wal_level = logical             
-        max_wal_senders = 1             
-        max_replication_slots = 1
-        ```       
-    * Update `pg_hba.conf` to the following for authenticating `myuser` to use `mydatabase`
-        ```bash
-        local     mydatabase      myuser      trust
-        ```
-    * Create/delete slot - [ref](https://www.postgresql.org/docs/10/logicaldecoding-example.html)
-        ```bash
-        # Create slot
-        pg_recvlogical -d <database> --slot <slot-name> --create-slot -P wal2json
-     
-        # Delete slot
-        select pg_drop_replication_slot('<slot-name>');
-        ```
 
 ## Monitoring
 1. Basic monitoring - [Telegraf](https://docs.influxdata.com/telegraf/v1.13/)

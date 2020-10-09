@@ -629,6 +629,12 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         # Restart the container
         sudo docker restart registry
         ```
+2. Adjusting the session-timeouts of kubernetes-dashboard to 4hrs (0 to disable timeouts) - [ref](https://blinkeye.github.io/post/public/2019-05-30-kubernetes-dashboard/#:~:text=Adjusting%20the%20timeout%20of%20the%20Kubernetes%20Dashboard&text=If%20you%20ever%20worked%20with,Disable%20the%20timeout)
+    * Edit kubernetes-dashboard deployment to add following under `.spec.template.spec.containers.args`
+        ```bash
+        kubectl edit deployments -n kubernetes-dashboard kubernetes-dashboard    
+           - '--token-ttl=14400'
+        ```
 
 ## Administration
 1. Enable kubectl autocompletion
@@ -762,6 +768,8 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
               serviceName: kubernetes-bootcamp
               servicePort: 8082
     ```
+
+## Monitoring
 
 ## References
 * etcd

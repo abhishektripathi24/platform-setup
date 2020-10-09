@@ -85,7 +85,7 @@ From the official docs -
     ```bash
     ./bin/kibana
     ```
- 
+
  ## References
  * https://www.elastic.co/guide/en/beats/filebeat/current/index.html
  * https://www.elastic.co/guide/en/kibana/current/index.html
