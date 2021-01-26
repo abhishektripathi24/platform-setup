@@ -195,6 +195,21 @@ From the official docs -
         
         # Get IP address of the client connecting on port 5432
         sudo tcpdump -i ens5 port 5432
+      
+        # Capture UDP packets at port 80
+        sudo tcpdump -i ens5 udp port 80 -vv -X
+      
+        # Capture TCP packets at port 80
+        sudo tcpdump -i ens5 tcp port 80 -vv -X
+        
+        # Capture all packets at port 80
+        sudo tcpdump -i ens5 port 80 -vv -X
+        ```
+        ###### Flags: 
+        ```bash
+         -i is interface
+         -vv is extra verbose
+         -X prints data of each packet
         ```
 
 11. Configure Linux Firewall using IPTables - [ref](https://www.geeksforgeeks.org/how-to-setup-firewall-in-linux/) 
