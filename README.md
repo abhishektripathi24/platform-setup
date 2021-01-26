@@ -41,8 +41,9 @@ Refer individual packages for detailed readme
     * [NGINX](https://github.com/abhishektripathi24/platform-setup/tree/master/nginx/)
 
 10. Miscellaneous:
+    * [OpenVPN](https://github.com/abhishektripathi24/platform-setup/tree/master/vpn/)
     * [Linux Utilities](https://github.com/abhishektripathi24/platform-setup/tree/master/linux/)
-    
+
 ...
 
 ![](logos.png)
