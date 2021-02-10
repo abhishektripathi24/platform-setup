@@ -92,6 +92,8 @@ To know more about Debezium, visit https://debezium.io/documentation/reference/1
         * `curl -X POST <connect_node_ip>:8083/connectors/<connector-name>/restart`
      * Delete connector -
         * `curl -X DELETE <connect_node_ip>:8083/connectors/<connector-name>`
+     * Restart task -
+        * `curl -X PUT <connect_node_ip>:8083/connectors/<connector-name>/tasks/0/restart`
 
  ## References
  * https://docs.confluent.io/current/connect/concepts.html
