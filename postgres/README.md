@@ -262,10 +262,29 @@ NOTE: For setting up streaming replication and production grade configuration, r
         psql -h <hostname> -p 5432 -U <username> < dbs.sql
     ```
 
-3. Database and Table size
+3. Resource size
     ```bash
+    # Database
     SELECT pg_size_pretty(pg_database_size('dbname'));
+    
+    # Tables
     SELECT pg_size_pretty(pg_total_relation_size('tablename'));
+    
+    # All tables reverse sorted by size
+    SELECT
+      nspname,
+      relname AS "relation",
+      pg_size_pretty (pg_total_relation_size (C.oid)) AS "total_size"
+    FROM 
+      pg_class C
+    LEFT JOIN 
+      pg_namespace N ON N.oid = C.relnamespace
+    WHERE
+      nspname NOT IN ('pg_catalog', 'information_schema')
+      AND C.relkind != 'i'
+      AND nspname !~ '^pg_toast'
+    ORDER BY
+      pg_total_relation_size (C.oid) DESC
     ```
 
 4. Drop database by terminating connections
