@@ -190,8 +190,9 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
       }
     }'
     ```
-6. curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'
-7. curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
+6. Cluster settings: `_cluster/settings?include_defaults=true&flat_settings=true`
+7. curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_cluster/settings -d '{ "transient": { "cluster.routing.allocation.disk.threshold_enabled": false } }'
+8. curl -XPUT -H "Content-Type: application/json" http://localhost:9200/_all/_settings -d '{"index.blocks.read_only_allow_delete": null}'
 
 ## References
 * Architectures - Hot-warm-cold
@@ -206,3 +207,9 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
     * https://blog.mimacom.com/parent-child-elasticsearch/
 * Cheatsheet
     * https://thoughts.t37.net/an-elasticsearch-cheat-sheet-9b92c9211d7b
+* Consistency & Replication
+    * https://stackoverflow.com/questions/38414504/elasticsearch-read-and-write-consistency
+    * https://www.alibabacloud.com/blog/elasticsearch-distributed-consistency-principles-analysis-3---data_594360
+    * https://liqul.github.io/blog/things-about-replication-in-elasticsearch/
+    * https://stackoverflow.com/questions/15694724/shards-and-replicas-in-elasticsearch
+    * https://discuss.elastic.co/t/elastic-search-and-consistency/16825

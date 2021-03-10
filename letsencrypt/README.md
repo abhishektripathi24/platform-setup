@@ -130,7 +130,6 @@ Steps to get a `wildcard certificate` for NGINX-Ubuntu 18.04.3 LTS combo from le
     ```
 
 ## Misc
-
 1. Get public key from certificate -
     ```bash
     openssl x509 -in <name>.crt -text -noout -pubkey

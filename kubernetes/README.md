@@ -769,8 +769,6 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
               servicePort: 8082
     ```
 
-## Monitoring
-
 ## References
 * etcd
     * https://medium.com/better-programming/a-closer-look-at-etcd-the-brain-of-a-kubernetes-cluster-788c8ea759a5
