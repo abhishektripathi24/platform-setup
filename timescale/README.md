@@ -157,3 +157,44 @@ Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [re
     host       replication     repuser         <replica-server-ip>       scram-sha-256
     host       all             all             all                       md5
     ``` 
+   
+## Administration
+1. Install Extension (Execute on master and slave servers individually):
+    ```bash 
+   sudo apt install timescaledb-1.7.4-postgresql-10
+   ```
+   
+2. Apply extension in individual databases:
+    * Create: `CREATE EXTENSION IF NOT EXISTS timescaledb VERSION '1.7.4';`
+    * Update: `ALTER EXTENSION timescaledb UPDATE TO '1.7.4';`
+
+3. Hypertable:
+    * Drop existing PK constraint: `ALTER TABLE <table_name> DROP CONSTRAINT table_name_pkey;`
+    * Create a new PK with partition columns involved: `ALTER TABLE <table_name> ADD PRIMARY KEY (id, created_at);`    
+    * Create hypertable with an emtpy table: `SELECT create_hypertable('table_name', 'created_at', chunk_time_interval => 86400000);`
+    * Create hypertable with a non-empty table: `SELECT create_hypertable('table_name','created_at', chunk_time_interval => 86400000, migrate_data => TRUE);`
+    * Update chunk time interval: `SELECT set_chunk_time_interval('table_name', 86400000);`
+    * Get all chunks: `SELECT show_chunks('table_name');`
+    * Get details of all chunks: `SELECT chunks_detailed_size('table_name');`
+    * Drop chunks newer than now(): `SELECT drop_chunks('table_name', newer_than => 1613242685861);`
+    * Regular indices can be created without including the partition column except UNIQUE indices: `create unique index on table_name(column, created_at) ;`
+
+4. Compression:
+    * Enable compression and set compression policy:
+        ```
+        ALTER TABLE table_name SET (timescaledb.compress, timescaledb.compress_orderby = 'id');
+        SELECT add_compression_policy('table_name', INTERVAL '7 days');
+        ```
+    * Disable compression: `ALTER TABLE table_name SET (timescaledb.compress = false);`
+    * Manually compress a chunk: `SELECT compress_chunk('_timescaledb_internal._hyper_6_833_chunk');`
+    * Manually compress all chunks: `SELECT compress_chunk(i) from show_chunks('table_name') i;`
+    * Manual decompress a chunk: `SELECT decompress_chunk('_timescaledb_internal._hyper_6_833_chunk');`
+    * Manual decompress all chunks: `SELECT decompress_chunk(i) from show_chunks('table_name') i;`
+    * Get compression status: `SELECT * FROM chunk_compression_stats('table_name');`
+    * Add compression policy: `SELECT add_compression_policy('table_name', BIGINT '1613325154622');`
+    * Remove compression policy: `SELECT remove_compression_policy('table_name');`
+    * Debug Job:
+        ```
+        SET client_min_messages TO DEBUG1;
+        CALL run_job(1002);
+        ```

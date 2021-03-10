@@ -255,7 +255,42 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
     ```bash
     sudo systemctl restart mysql
     ``` 
+
+## Misc
+1. Uninstall mysql:
+    ```bash
+    sudo apt -y purge mysql*
+    sudo apt -y autoremove
+    sudo rm -rf /etc/mysql
+    sudo rm -rf /var/lib/mysql*
+    ```
+
+1. Sample custom `mysqld.cnf`: 
+    ```bash
+    #------------------------------------------------------------------------------
+    # CUSTOMIZED OPTIONS
+    #------------------------------------------------------------------------------
     
+    # Add settings for extensions here
+    
+    # Connection settings
+    bind-address = 0.0.0.0
+    
+    # Directory settings
+    datadir = /data/mysql-data
+    
+    # Bin log settings
+    server-id = 1
+    log_bin = mysql-bin.log
+    log_bin_index = mysql-bin.log.index
+    relay_log = mysql-relay-bin
+    relay_log_index = mysql-relay-bin.index
+    
+    # GTID settings
+    gtid_mode = ON
+    enforce_gtid_consistency = ON
+    ```
+   
 ## Administration
 1. User Management - [[AWS](https://aws.amazon.com/premiumsupport/knowledge-center/duplicate-master-user-mysql/)]
     * User create/view/update/delete
@@ -358,39 +393,4 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
     WHERE TABLE_SCHEMA = "database_name"
     ORDER BY (DATA_LENGTH + INDEX_LENGTH)
     DESC;
-    ```
-
-## Misc
-1. Uninstall mysql:
-    ```bash
-    sudo apt -y purge mysql*
-    sudo apt -y autoremove
-    sudo rm -rf /etc/mysql
-    sudo rm -rf /var/lib/mysql*
-    ```
-
-1. Sample custom `mysqld.cnf`: 
-    ```bash
-    #------------------------------------------------------------------------------
-    # CUSTOMIZED OPTIONS
-    #------------------------------------------------------------------------------
-    
-    # Add settings for extensions here
-    
-    # Connection settings
-    bind-address = 0.0.0.0
-    
-    # Directory settings
-    datadir = /data/mysql-data
-    
-    # Bin log settings
-    server-id = 1
-    log_bin = mysql-bin.log
-    log_bin_index = mysql-bin.log.index
-    relay_log = mysql-relay-bin
-    relay_log_index = mysql-relay-bin.index
-    
-    # GTID settings
-    gtid_mode = ON
-    enforce_gtid_consistency = ON
     ```

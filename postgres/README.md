@@ -124,6 +124,34 @@ NOTE: For setting up streaming replication and production grade configuration, r
         # Delete slot
         select pg_drop_replication_slot('<slot-name>');
         ```
+      
+4. Remove specific version if multiple versions installed
+    ```bash
+    # List and verify components to be removed
+    dpkg -l | grep postgres
+ 
+    ii  pgdg-keyring                          2018.2                                          all          keyring for apt.postgresql.org
+    ii  postgresql-10                         10.12-2.pgdg18.04+1                             amd64        object-relational SQL database, version 10 server
+    ii  postgresql-12                         12.2-2.pgdg18.04+1                              amd64        object-relational SQL database, version 12 server
+    ii  postgresql-12-postgis-3               3.0.1+dfsg-2.pgdg18.04+1                        amd64        Geographic objects support for PostgreSQL 12
+    ii  postgresql-12-postgis-3-scripts       3.0.1+dfsg-2.pgdg18.04+1                        all          Geographic objects support for PostgreSQL 12 -- SQL scripts
+    ii  postgresql-client-10                  10.12-2.pgdg18.04+1                             amd64        front-end programs for PostgreSQL 10
+    ii  postgresql-client-12                  12.2-2.pgdg18.04+1                              amd64        front-end programs for PostgreSQL 12
+    ii  postgresql-client-common              213.pgdg18.04+1                                 all          manager for multiple PostgreSQL client versions
+    ii  postgresql-common                     213.pgdg18.04+1                                 all          PostgreSQL database-cluster manager
+ 
+    # Delete pg 12
+    sudo apt-get --purge remove postgresql-12 postgresql-12-postgis-3 postgresql-12-postgis-3-scripts postgresql-client-12
+    
+    # Verify residuals
+    dpkg -l | grep postgres
+ 
+    ii  pgdg-keyring                          2018.2                                          all          keyring for apt.postgresql.org
+    ii  postgresql-10                         10.12-2.pgdg18.04+1                             amd64        object-relational SQL database, version 10 server
+    ii  postgresql-client-10                  10.12-2.pgdg18.04+1                             amd64        front-end programs for PostgreSQL 10
+    ii  postgresql-client-common              213.pgdg18.04+1                                 all          manager for multiple PostgreSQL client versions
+    ii  postgresql-common                     213.pgdg18.04+1                                 all          PostgreSQL database-cluster manager
+    ```
 
 ## Administration
 1. User Management - [[pg-docs-create-user](https://www.postgresql.org/docs/12/sql-createuser.html), [pg-docs-grant](https://www.postgresql.org/docs/12/sql-grant.html), [AWS](https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/), [Blog](https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html)]
@@ -152,11 +180,27 @@ NOTE: For setting up streaming replication and production grade configuration, r
     REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM readonly;
     REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM readonly;
     REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM readonly;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON TABLES FROM readonly;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON SEQUENCES FROM readonly;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON FUNCTIONS FROM readonly;
     REVOKE ALL PRIVILEGES ON SCHEMA public FROM readonly;
+    REVOKE ALL PRIVILEGES ON DATABASE test FROM readonly;
     REASSIGN OWNED BY readonly to postgres;
     DROP OWNED BY readonly; - https://stackoverflow.com/questions/9840955/postgresql-drop-role-fails-because-of-default-privileges
     DROP ROLE readonly;
+   
+    Alter Search Path at Role level -
+    ----------------------------
+    ALTER ROLE username SET search_path = schema1,schema2,schema3,etc;
     
+    ALTER ROLE myrole RESET search_path;
+    
+    SELECT r.rolname, d.datname, rs.setconfig
+    FROM   pg_db_role_setting rs
+    LEFT   JOIN pg_roles      r ON r.oid = rs.setrole
+    LEFT   JOIN pg_database   d ON d.oid = rs.setdatabase
+    WHERE  r.rolname = 'role_name' OR d.datname = 'mydb';
+   
     ========================================================================
     Sample production scenario - 
     i) Create readonly, readwrite roles without login.
@@ -230,6 +274,9 @@ NOTE: For setting up streaming replication and production grade configuration, r
     REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM airflow;
     REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM airflow;
     REVOKE ALL PRIVILEGES ON SCHEMA public FROM airflow;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON TABLES FROM airflow;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON SEQUENCES FROM airflow;
+    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON FUNCTIONS FROM airflow;
     REASSIGN OWNED BY airflow to postgres;
     DROP OWNED BY airflow;
     DROP ROLE airflow;
@@ -302,33 +349,57 @@ NOTE: For setting up streaming replication and production grade configuration, r
     # Drop database
     DROP DATABASE my_database_name
     ```
-
-5. Remove specific version if multiple versions installed
-    ```bash
-    # List and verify components to be removed
-    dpkg -l | grep postgres
- 
-    ii  pgdg-keyring                          2018.2                                          all          keyring for apt.postgresql.org
-    ii  postgresql-10                         10.12-2.pgdg18.04+1                             amd64        object-relational SQL database, version 10 server
-    ii  postgresql-12                         12.2-2.pgdg18.04+1                              amd64        object-relational SQL database, version 12 server
-    ii  postgresql-12-postgis-3               3.0.1+dfsg-2.pgdg18.04+1                        amd64        Geographic objects support for PostgreSQL 12
-    ii  postgresql-12-postgis-3-scripts       3.0.1+dfsg-2.pgdg18.04+1                        all          Geographic objects support for PostgreSQL 12 -- SQL scripts
-    ii  postgresql-client-10                  10.12-2.pgdg18.04+1                             amd64        front-end programs for PostgreSQL 10
-    ii  postgresql-client-12                  12.2-2.pgdg18.04+1                              amd64        front-end programs for PostgreSQL 12
-    ii  postgresql-client-common              213.pgdg18.04+1                                 all          manager for multiple PostgreSQL client versions
-    ii  postgresql-common                     213.pgdg18.04+1                                 all          PostgreSQL database-cluster manager
- 
-    # Delete pg 12
-    sudo apt-get --purge remove postgresql-12 postgresql-12-postgis-3 postgresql-12-postgis-3-scripts postgresql-client-12
+   
+5. Explain cost attributes
+    ```postgresql
+    SHOW parallel_tuple_cost;
+    SHOW parallel_setup_cost;
+    SHOW random_page_cost;
+    SHOW cpu_index_tuple_cost;
+    SHOW cpu_tuple_cost;
+    SHOW cpu_operator_cost;
+    SHOW seq_page_cost;   
+    ```
+   
+6. Replication status
+    ```postgresql
+    select pg_last_xact_replay_timestamp();
+    select pg_last_wal_receive_lsn();
+    select pg_last_wal_replay_lsn();
+    select pg_last_wal_receive_lsn();
+    select pg_last_wal_replay_lsn();
+    select now()-pg_last_xact_replay_timestamp() as replication_lag;
     
-    # Verify residuals
-    dpkg -l | grep postgres
- 
-    ii  pgdg-keyring                          2018.2                                          all          keyring for apt.postgresql.org
-    ii  postgresql-10                         10.12-2.pgdg18.04+1                             amd64        object-relational SQL database, version 10 server
-    ii  postgresql-client-10                  10.12-2.pgdg18.04+1                             amd64        front-end programs for PostgreSQL 10
-    ii  postgresql-client-common              213.pgdg18.04+1                                 all          manager for multiple PostgreSQL client versions
-    ii  postgresql-common                     213.pgdg18.04+1                                 all          PostgreSQL database-cluster manager
+    
+     pg_last_xact_replay_timestamp
+    -------------------------------
+     2021-03-04 06:02:32.54961+00
+    (1 row)
+    
+     pg_last_wal_receive_lsn
+    -------------------------
+     2F38/BF598000
+    (1 row)
+    
+     pg_last_wal_replay_lsn
+    ------------------------
+     2F38/BF597E38
+    (1 row)
+    
+     pg_last_wal_receive_lsn
+    -------------------------
+     2F38/BF5B4000
+    (1 row)
+    
+     pg_last_wal_replay_lsn
+    ------------------------
+     2F38/BF5B3240
+    (1 row)
+    
+     replication_lag
+    -----------------
+     00:00:00.357847
+    (1 row)
     ```
 
 ## Monitoring
