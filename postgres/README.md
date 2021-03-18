@@ -155,16 +155,14 @@ NOTE: For setting up streaming replication and production grade configuration, r
 
 ## Administration
 1. User Management - [[pg-docs-create-user](https://www.postgresql.org/docs/12/sql-createuser.html), [pg-docs-grant](https://www.postgresql.org/docs/12/sql-grant.html), [AWS](https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/), [Blog](https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html)]
-    ```bash
-    Create Role -
-    -------------
+    ```postgresql
+    -- Create Role
     CREATE ROLE readonly WITH LOGIN PASSWORD 'test';
     or
     CREATE ROLE readonly;
     ALTER ROLE readonly WITH LOGIN;
     
-    Grant Read Role -
-    ------------------
+    -- Grant Read Role
     GRANT CONNECT ON DATABASE test_db TO readonly;
     \c test_db;
     GRANT USAGE ON SCHEMA public TO readuser;
@@ -173,8 +171,7 @@ NOTE: For setting up streaming replication and production grade configuration, r
     ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readuser;
     ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON SEQUENCES TO readuser;
     
-    Drop Read Role -
-    ----------------
+    -- Drop Read Role
     REVOKE CONNECT ON Database test FROM readonly;
     \c test_db;
     REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM readonly;
@@ -189,8 +186,7 @@ NOTE: For setting up streaming replication and production grade configuration, r
     DROP OWNED BY readonly; - https://stackoverflow.com/questions/9840955/postgresql-drop-role-fails-because-of-default-privileges
     DROP ROLE readonly;
    
-    Alter Search Path at Role level -
-    ----------------------------
+    -- Alter Search Path at Role level -
     ALTER ROLE username SET search_path = schema1,schema2,schema3,etc;
     
     ALTER ROLE myrole RESET search_path;
@@ -201,12 +197,12 @@ NOTE: For setting up streaming replication and production grade configuration, r
     LEFT   JOIN pg_database   d ON d.oid = rs.setdatabase
     WHERE  r.rolname = 'role_name' OR d.datname = 'mydb';
    
-    ========================================================================
-    Sample production scenario - 
-    i) Create readonly, readwrite roles without login.
-    ii) Grant these roles to new users with login.
-    iii) PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_ROOT_USER $DATABASE -tAc "select * from rand;"
-    ========================================================================
+    -- ========================================================================
+    -- Sample production scenario - 
+    -- i) Create readonly, readwrite roles without login.
+    -- ii) Grant these roles to new users with login.
+    -- iii) PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_ROOT_USER $DATABASE -tAc "select * from rand;"
+    -- ========================================================================
  
     -- Revoke privileges from 'public' role
     REVOKE CREATE ON SCHEMA public FROM PUBLIC;
@@ -253,7 +249,7 @@ NOTE: For setting up streaming replication and production grade configuration, r
 
     -- Sample application user
  
-    1. Create role and grant permissions 
+    -- 1. Create role and grant permissions 
     CREATE ROLE airflow WITH login PASSWORD 'airflow';
     GRANT CONNECT ON DATABASE airflow TO airflow;
     GRANT ALL PRIVILEGES ON SCHEMA public TO airflow;
@@ -265,10 +261,10 @@ NOTE: For setting up streaming replication and production grade configuration, r
     ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO airflow;
     ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO airflow;
  
-    2. Make this role/user as the owner of the tables (if any), from postgres to airflow
+    -- 2. Make this role/user as the owner of the tables (if any), from postgres to airflow
     ALTER TABLE table_name OWNER TO airflow;
     
-    3. Revoke previliges
+    -- 3. Revoke previliges
     REVOKE CONNECT ON DATABASE airflow FROM airflow;
     REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM airflow;
     REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM airflow;
@@ -310,14 +306,14 @@ NOTE: For setting up streaming replication and production grade configuration, r
     ```
 
 3. Resource size
-    ```bash
-    # Database
+    ```postgresql
+    -- Database
     SELECT pg_size_pretty(pg_database_size('dbname'));
     
-    # Tables
+    -- Tables
     SELECT pg_size_pretty(pg_total_relation_size('tablename'));
     
-    # All tables reverse sorted by size
+    -- All tables reverse sorted by size
     SELECT
       nspname,
       relname AS "relation",
@@ -335,18 +331,18 @@ NOTE: For setting up streaming replication and production grade configuration, r
     ```
 
 4. Drop database by terminating connections
-    ```bash
-    # Making sure the database exists
+    ```postgresql
+    -- Making sure the database exists
     SELECT * from pg_database where datname = 'my_database_name'
     
-    # Disallow new connections
+    -- Disallow new connections
     UPDATE pg_database SET datallowconn = 'false' WHERE datname = 'my_database_name';
     ALTER DATABASE my_database_name CONNECTION LIMIT 1;
     
-    # Terminate existing connections
+    -- Terminate existing connections
     SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'my_database_name';
     
-    # Drop database
+    -- Drop database
     DROP DATABASE my_database_name
     ```
    

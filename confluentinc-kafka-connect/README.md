@@ -73,11 +73,19 @@ To know more about Debezium, visit https://debezium.io/documentation/reference/1
     * Debezium PostgreSQL connector - https://repo1.maven.org/maven2/io/debezium/debezium-connector-postgres/1.0.0.Final/debezium-connector-postgres-1.0.0.Final-plugin.tar.gz 
     * Debezium MongoDB connector - https://repo1.maven.org/maven2/io/debezium/debezium-connector-mongodb/1.0.0.Final/debezium-connector-mongodb-1.0.0.Final-plugin.tar.gz
 
+2. For MySQL RDS -
+    * Following properties should be enabled:
+        * binlog_format: ROW
+        * binlog_row_image: full
+    * Binlogs retention should be set:
+        * Set - `call mysql.rds_set_configuration('binlog retention hours', 96);`
+        * Verify - `call mysql.rds_show_configuration;`
+
  ## Usage
  * Rest APIs:
      * List all connectors -
         * `curl -X GET <connect_node_ip>:8083/connectors/`
-     * Create a new connector:
+     * Create a new connector -
         * [source connector](connectors-config.txt) - `curl -X POST <connect_node_ip>:8083/connectors -d '{...}'`
         * [sink connector](connectors-config.txt)
      * Get connector -

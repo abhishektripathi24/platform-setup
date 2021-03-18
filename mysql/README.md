@@ -40,13 +40,16 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         chown mysql:mysql /var/run/mysqld
         sudo mysqld_safe --skip-grant-tables &
         mysql -uroot
+        ```
+        ```mysql
         use mysql;
         SELECT user,authentication_string,plugin,host FROM mysql.user;
         UPDATE user set authentication_string=PASSWORD("root") WHERE user='root';
         UPDATE user set plugin="mysql_native_password" WHERE user='root'; 
         FLUSH PRIVILEGES;
         quit;
-    
+      ```
+      ```bash    
         # Stop mysqld process and restart mysql service
         ps -ef | grep mysql
         sudo kill -9 <pid of mysqld_safe --skip-grant-tables> <pid of /usr/sbin/mysqld --basedir=/usr...>   
@@ -100,6 +103,8 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         ```bash
         # Login to mysql shell from server's localhost
         mysql -uroot -proot
+        ```
+        ```mysql
         use mysql; 
         GRANT ALL ON *.* TO 'root'@'%' identified by 'root';
         FLUSH PRIVILEGES;
@@ -108,7 +113,8 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         ```bash
         # First restart mysql server
         sudo systemctl restart mysql
-    
+        ```
+        ```mysql
         # Check variables
         SHOW VARIABLES like '%log_bin%';
         SHOW VARIABLES like '%gtid%';
@@ -116,18 +122,18 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
 
 2. Steps to be executed on `Master`
     * Login to mysql shell and create a replication user and grant replication permission
-        ```bash
+        ```mysql
         CREATE USER 'repl_user'@'<replica-instance-ip>' IDENTIFIED BY 'replica_password';
         GRANT REPLICATION SLAVE ON *.* TO 'repl_user'@'<replica-instance-ip>';
         FLUSH PRIVILEGES; 
         ```
     * Stop writes to master database
-        ```bash
+        ```mysql
         FLUSH TABLES WITH READ LOCK;
         SET GLOBAL read_only = ON;
         ```
     * Check the master binlog position. This will be the starting point of replica
-        ```bash
+        ```mysql
         SHOW MASTER STATUS\G
         
         # Sample output
@@ -144,23 +150,23 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         mysqldump -h <master-instance-ip> -u root -p --all-databases > master_dump.sql
         ```
     * Enable write on master
-        ```bash
+        ```mysql
         SET GLOBAL read_only = OFF;
         UNLOCK TABLES;
         ```
 
 3. Steps to be executed on `Slave`
     * Restore master dump in slave
-        ```bash
+        ```mysql
         # Restore in replica
         mysql -uroot -p < master_dump.sql
         ``` 
     * Stop slave threads
-        ```bash
+        ```mysql
         STOP SLAVE;
         ```
     * Point slave to master's checkpoint details
-        ```bash
+        ```mysql
         CHANGE MASTER TO
         MASTER_HOST='<master-instance-ip>',
         MASTER_USER='repl_user',
@@ -169,11 +175,11 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         MASTER_LOG_POS=1568347; # This is the position shown in SHOW MASTER STATUS\G
         ```
     * Allow slave to replicate from master by resuming slave threads
-        ```bash
+        ```mysql
         START SLAVE;
         ```
     * Check replication status
-        ```bash
+        ```mysql
         SHOW SLAVE STATUS\G
         
         # Sample output
@@ -294,7 +300,7 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
 ## Administration
 1. User Management - [[AWS](https://aws.amazon.com/premiumsupport/knowledge-center/duplicate-master-user-mysql/)]
     * User create/view/update/delete
-        ```bash
+        ```mysql
         # Create user and allow login from localhost
         CREATE USER 'username'@'localhost' IDENTIFIED BY 'Abc123';
         CREATE USER 'username'@'10.%' IDENTIFIED BY 'Abc123';
@@ -309,7 +315,7 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         DROP USER 'username'@'localhost';
         ```
     * Password update/revoke
-        ```bash
+        ```mysql
         # Update password for any user
         SET PASSWORD FOR 'jim'@'localhost' = PASSWORD('NewPass');
      
@@ -326,7 +332,7 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
         SELECT authentication_string, group_concat(user) FROM mysql.user GROUP BY authentication_string HAVING count(user)>1;             
         ```
     * Permission show/grant/revoke
-        ```bash
+        ```mysql
         # View grants for user
         SHOW GRANTS FOR 'username';
         SHOW GRANTS FOR 'username'@'localhost';
@@ -385,7 +391,7 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
     ``` 
 
 3. Database and table size
-    ```bash
+    ```mysql
     SELECT 
        TABLE_NAME AS `Table`,
        ROUND((DATA_LENGTH + INDEX_LENGTH) / 1024 / 1024) AS `Size (MB)`
@@ -393,4 +399,20 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
     WHERE TABLE_SCHEMA = "database_name"
     ORDER BY (DATA_LENGTH + INDEX_LENGTH)
     DESC;
+    ```
+4. Tables without primary key
+    ```mysql
+    select tab.table_schema as database_name,
+        tab.table_name
+    from information_schema.tables tab
+    left join information_schema.table_constraints tco
+        on tab.table_schema = tco.table_schema
+        and tab.table_name = tco.table_name
+        and tco.constraint_type = 'PRIMARY KEY'
+    where tco.constraint_type is null
+        and tab.table_schema not in('mysql', 'information_schema',
+        'performance_schema', 'sys')
+        and tab.table_type = 'BASE TABLE'
+    order by tab.table_schema,
+        tab.table_name;
     ```

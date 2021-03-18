@@ -55,7 +55,7 @@ Installation of `OpenVPN 2.4.4` on `Ubuntu 18.04.3 LTS` - [ref](https://github.c
         </Authorization>
     ```
 
-4. Update `server.conf` as the sample shown:
+4. Update `server.conf` as the sample shown
     ```bash
    ;local <vpn-server's-private-ip>
    port 1194
@@ -130,7 +130,7 @@ Installation of `OpenVPN 2.4.4` on `Ubuntu 18.04.3 LTS` - [ref](https://github.c
    push "route 10.13.18.0 255.255.255.0"
    ```
 
-5. Add following keys in the `client.ovpn` file:
+5. Add following keys in the `client.ovpn` file
     ```bash
     key-direction 1
     
