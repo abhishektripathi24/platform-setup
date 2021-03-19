@@ -77,7 +77,7 @@ To know more about Debezium, visit https://debezium.io/documentation/reference/1
     * Following properties should be enabled:
         * binlog_format: ROW
         * binlog_row_image: full
-    * Binlogs retention should be set:
+    * Binlog retention should be set in both master and replica individually:
         * Set - `call mysql.rds_set_configuration('binlog retention hours', 96);`
         * Verify - `call mysql.rds_show_configuration;`
 
