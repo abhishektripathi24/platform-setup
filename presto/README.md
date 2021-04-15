@@ -1,5 +1,5 @@
 # Presto [Cluster Setup]
-<img src="https://github.com/abhishektripathi24/platform-setup/blob/master/presto/images/presto-logo.png" width="200" height="200"/>
+<img src="https://github.com/abhishektripathi24/platform-setup/blob/master/presto/images/presto-logo.png" width="400" height="200"/>
 
 To know more about presto, visit https://prestodb.io/
 
