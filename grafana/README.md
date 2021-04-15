@@ -26,7 +26,7 @@ Installation of `Grafana 6.6.2` on `Ubuntu 18.04.3 LTS` - [ref](https://grafana.
         sudo cp conf/sample.ini conf/custom.ini
         ```
     * Server configuration - 
-        ```bash
+        ```properties
         [server]
         # The public facing domain name used to access grafana from a browser
         domain = monitoring.blueleaf.com
@@ -42,14 +42,14 @@ Installation of `Grafana 6.6.2` on `Ubuntu 18.04.3 LTS` - [ref](https://grafana.
         ```
     * Ldap configuration - [ref](https://grafana.com/docs/grafana/latest/auth/ldap/)
         * Update `conf/custom.ini`
-            ```bash
+            ```properties
             [auth.ldap]
             enabled = true
             config_file = /opt/grafana/conf/ldap.toml
             allow_sign_up = true
             ```
         * Update `conf/ldap.toml`
-            ```bash
+            ```properties
              # assuming org-name: blueleaf
              [[servers]]
              host = "ldap://<ip/hostname>"
@@ -64,7 +64,7 @@ Installation of `Grafana 6.6.2` on `Ubuntu 18.04.3 LTS` - [ref](https://grafana.
             ```
     *  SMTP configuration - [ref](https://grafana.com/docs/grafana/latest/alerting/notifications/)
         * Update `conf/custom.ini`
-            ```bash
+            ```properties
             [smtp]
             enabled = true
             host = email-smtp.eu-west-1.amazonaws.com:587

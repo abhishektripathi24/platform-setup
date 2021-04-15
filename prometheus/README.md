@@ -25,7 +25,7 @@ Installation of `Prometheus 2.16` on `Ubuntu 18.04.3 LTS` - [ref](https://github
     ```
 
 2. Update `prometheus.yml` for scrape config under section `scrape_config` - [ref](https://prometheus.io/docs/prometheus/latest/configuration/configuration/)
-    ```bash
+    ```yaml
     scrape_configs:
       # scrape targets through static configs
       - job_name: 'static-scrape-job'
@@ -108,7 +108,7 @@ Installation of `Bloackbox Exporter 0.16.0` on `Ubuntu 18.04.3 LTS` - [ref](http
     ``` 
 
 3. The list of endpoints to be probed is located in the Prometheus configuration file as part of the Blackbox Exporter’s targets directive. Update `prometheus.yml` for scrape config under section `scrape_config`. No need to change anything in blackbox exporter config - [ref](https://github.com/prometheus/blackbox_exporter)
-    ```bash
+    ```yaml
     scrape_configs:
      - job_name: 'website-scrape-job'
         metrics_path: /probe # Blackbox Exporter runs on port 9115 with metrics available on the /probe endpoint.
@@ -148,7 +148,7 @@ Installation of `Alertmanager 0.20.0` on `Ubuntu 18.04.3 LTS` - [ref](https://gi
     ```
     
 2. Update `alertmanager.yml` - [ref1](https://github.com/prometheus/alertmanager), [ref2](https://prometheus.io/docs/alerting/configuration/)
-    ```bash
+    ```yaml
     global:
       resolve_timeout: 5m
       smtp_smarthost: 'email-smtp.eu-west-1.amazonaws.com:587'
@@ -206,7 +206,7 @@ Installation of `Alertmanager 0.20.0` on `Ubuntu 18.04.3 LTS` - [ref](https://gi
     ```
 
 3. Update `prometheus.yml` to connect alertmanager with prometheus 
-    ```bash
+    ```yaml
     # Alertmanager configuration
     alerting:
       alertmanagers:

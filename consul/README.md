@@ -26,7 +26,7 @@ Installation of `Consul v1.7.2` on `Ubuntu 18.04.3 LTS` - [ref](https://learn.ha
     ```
 
 3. Create config file for all the nodes at `/etc/consul.d/config.json` with the following properties (the following properties are for a cluster of 3 nodes) - [ref](https://www.consul.io/docs/agent/options.html)
-    ```bash
+    ```json
     {
         "bootstrap_expect": 3,
         "client_addr": "0.0.0.0",
@@ -130,7 +130,7 @@ Forward DNS requests for domain `.consul` on port `53` to `8600` via `Unbound 1.
     ```
  
 2. Create config file for forwarding `.consul` domain request from port `53` to `8600` at `/etc/unbound/unbound.conf.d/consul.conf` with the following properties - [ref](https://www.consul.io/docs/agent/options.html)
-    ```bash
+    ```properties
     #Allow insecure queries to local resolvers
     server:
       do-not-query-localhost: no
@@ -155,7 +155,7 @@ Forward DNS requests for domain `.consul` on port `53` to `8600` via `Unbound 1.
     ```
 
 4. Update `/etc/resolv.conf` to replace `nameserver 127.0.0.53` to following
-    ```bash
+    ```properties
     nameserver 127.0.0.1
     ```
     
@@ -170,7 +170,7 @@ Forward DNS requests for domain `.consul` on port `53` to `8600` via `Unbound 1.
     ```
 
 7. Update nameservers in `/etc/systemd/resolved.conf` on the nodes which want to resolve `.service.consul` domain
-    ```bash
+    ```properties
     [Resolve]
     DNS=<unbound-ip-1> <unbound-ip-2> <unbound-ip-3>
 
@@ -203,7 +203,7 @@ Installation of `Consul Template 0.24.1` on `Ubuntu 18.04.3 LTS` - [ref1](https:
    ```
    
 2. Reference config from [hashicorp github](https://github.com/hashicorp/consul-template#configuration-file-format) and update for change. Sample working config is available [here](consul-template/consul-template-config.hcl) and templates [here](consul-template/consul-nginx-template.ctmpl) - [ref](https://github.com/hashicorp/consul-template/blob/master/examples/nginx.md)
-    ```json
+    ```properties
     # provide consul address
     address = "<consul-node-1-ip-or-hostname>:8500"
    

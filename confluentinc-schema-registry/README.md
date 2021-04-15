@@ -35,7 +35,7 @@ Installation of `Schema Registry via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - 
     ```
 
 3. Update `etc/schema-registry/schema-registry.properties`
-    ```bash
+    ```properties
     kafkastore.bootstrap.servers=PLAINTEXT://10.11.18.58:9092,PLAINTEXT://10.11.18.59:9092,PLAINTEXT://10.11.18.60:9092
     ```
 

@@ -101,11 +101,11 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
         
 6. Reverse Proxy (NGINX config)
     * Update following variable in `airflow.cfg` for airflow admin
-        ```
+        ```properties
         base_url = http://my_host/myorg/airflow
         ```
     * Corresponding NGINX config
-        ```buildoutcfg
+        ```properties
         server {
           listen 80;
           server_name lab.mycompany.com;
@@ -121,25 +121,25 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
         }
         ```
     * Update following variable in `airflow.cfg` for flower dashboard
-        ```
+        ```properties
         flower_url_prefix = /myorg/flower
         ```
     * Corresponding NGINX config
-        ```buildoutcfg
-            server {
-                listen 80;
-                server_name lab.mycompany.com;
-            
-                location /myorg/flower/ {
-                    rewrite ^/myorg/flower/(.*)$ /$1 break;
-                    proxy_pass http://localhost:5555;
-                    proxy_set_header Host $host;
-                    proxy_redirect off;
-                    proxy_http_version 1.1;
-                    proxy_set_header Upgrade $http_upgrade;
-                    proxy_set_header Connection "upgrade";
-                }
+        ```properties
+        server {
+            listen 80;
+            server_name lab.mycompany.com;
+        
+            location /myorg/flower/ {
+                rewrite ^/myorg/flower/(.*)$ /$1 break;
+                proxy_pass http://localhost:5555;
+                proxy_set_header Host $host;
+                proxy_redirect off;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection "upgrade";
             }
+        }
         ```
       
 7. If your linux distro supports systemd, you can supervise these processes under it. The corresponding systemd service files are present in this repo at [this](systemd) location. 

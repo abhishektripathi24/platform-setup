@@ -25,7 +25,7 @@ From the official docs -
     ``` 
    
  2. Configure `filebeat.yml` to read log file and output to elasticsearch's ingest pipeline
-    ```bash
+    ```yaml
     filebeat.inputs:
     - type: log
       enabled: true
@@ -43,7 +43,7 @@ From the official docs -
       index: "custom-index-name-%{+yyyy.MM.dd}"
     ``` 
     
-3. Start filebeat -
+3. Start filebeat process
     ```bash
     ./filebeat
     ```
@@ -63,7 +63,7 @@ From the official docs -
     ``` 
    
 2. Update `config/kibana.yml` - ([x-pack ref](https://www.elastic.co/guide/en/kibana/7.5/settings-xpack-kb.html))
-    ```bash
+    ```yaml
     server.host: "0.0.0.0"
     elasticsearch.hosts: ["http://localhost:9200"]
     logging.dest: /var/log/kibana/kibana.log
@@ -81,7 +81,7 @@ From the official docs -
     xpack.reporting.enabled: false
     ```
    
-3. Start kibana -
+3. Start kibana process
     ```bash
     ./bin/kibana
     ```

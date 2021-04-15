@@ -48,7 +48,7 @@ Installation of `Redis 5.0.7` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com
 
 3. Configure Redis-Server: update `redis.conf`
     * Configure Master: 
-        ```
+        ```properties
         # Comment the line if you want to allow clients to connect redis from all network interfaces and not restricted to loopback interface
         bind 127.0.0.1
         
@@ -96,7 +96,7 @@ Installation of `Redis 5.0.7` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com
 
 4. Configure Redis-Sentinel: update `sentinel.conf`
     * Set following for a 3 node sentinel setup on each sentinel node -
-        ```bash
+        ```properties
         # Set log file & location      
         logfile "/var/log/redis/redis-sentinel.log"
         

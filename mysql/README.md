@@ -400,6 +400,7 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
     ORDER BY (DATA_LENGTH + INDEX_LENGTH)
     DESC;
     ```
+   
 4. Tables without primary key
     ```mysql
     select tab.table_schema as database_name,
@@ -416,3 +417,11 @@ Installation of `Mysql 5.7` on `Ubuntu 18.04.3 LTS` - [ref](https://dev.mysql.co
     order by tab.table_schema,
         tab.table_name;
     ```
+   
+5. Log all statements 
+    ```mysql
+    SET global log_output = 'FILE';
+    SET global general_log_file='/Applications/MAMP/logs/mysql_general.log';
+    SET global general_log = 1;
+    ```
+   

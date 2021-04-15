@@ -39,7 +39,7 @@ Installation of `Apache Superset 0.29.0rc7` on `Ubuntu 18.04.3 LTS` - [ref](http
     * Domain sharding.
     
     With `vim /opt/superset/superset_config.py`, the final config looks like this -
-    ```bash
+    ```properties
     #---------------------------------------------------------
     # Superset specific config
     #---------------------------------------------------------

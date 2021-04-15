@@ -37,12 +37,12 @@ Installation of `Apache Kafka 2.4.0` on `Ubuntu 18.04.3 LTS` - [ref](https://kaf
     ```
 
 3. Update `config/zookeeper.properties` (assuming the data directory is mounted at /data - as per the [NOTE](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-zookeeper) in zk setup)
-    ```bash
+    ```properties
     dataDir=/data/zookeeper
     ```
    
 4. Update `config/server.properties` (assuming the data directory is mounted at /data - as per the [NOTE](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-zookeeper) in zk setup)
-    ```bash
+    ```properties
     broker.id=0 # this should be unique for each broker node
     advertised.listeners=PLAINTEXT://10.11.18.59:9092 # ip-address/url of this server itself
     log.dirs=/data/kafka/logs

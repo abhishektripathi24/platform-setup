@@ -34,7 +34,7 @@ Installation of `Apache Zookeeper 3.5.6` on `Ubuntu 18.04.3 LTS` - [ref](https:/
     ```
     
 3. Update `conf/zoo.cfg` (the following steps are for a cluster of 3 nodes)
-    ```bash
+    ```properties
     dataDir=/var/lib/zookeeper
     server.1=10.11.18.58:2888:3888
     server.2=10.11.18.59:2888:3888

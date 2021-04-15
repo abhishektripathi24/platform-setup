@@ -54,7 +54,7 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
     ``` 
    
 5. Update `config/elasticsearch.yml` to bootstrap the cluster using default discovery method (the following properties are for a cluster of 3 nodes) - [initial-bootstrap-ref](https://www.elastic.co/guide/en/elasticsearch/reference/master/modules-discovery-bootstrap-cluster.html), [discovery-settings-ref](https://www.elastic.co/guide/en/elasticsearch/reference/master/discovery-settings.html)
-    ```bash
+    ```yaml
     # Common settings
     cluster.name: es-cluster
     node.name: node-1
@@ -74,7 +74,7 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
        ./bin/elasticsearch-plugin install discovery-ec2
        ```
    * Update plugin related config in `config/elasticsearch.yml` - [ref](https://www.elastic.co/guide/en/elasticsearch/plugins/master/discovery-ec2-usage.html) 
-       ```bash
+       ```yaml
         # e.g. using AWS discovery plugin 
         discovery.zen.minimum_master_nodes: 2
         discovery.zen.hosts_provider: ec2
@@ -87,7 +87,7 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
        es_discovery: es-master-cluster 
        ```
    * Create IAM role with the following policy and attach the role with the instances - [ref](https://www.elastic.co/guide/en/elasticsearch/plugins/master/discovery-ec2-usage.html)
-        ```bash
+        ```json
         {
             "Version": "2012-10-17",
             "Statement": [
@@ -102,7 +102,7 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
    * Provide aws credentials if you can't create IAM role ([ref](https://www.elastic.co/guide/en/elasticsearch/plugins/6.0/_settings.html)) and verify from the keystore ([ref](https://www.elastic.co/guide/en/elasticsearch/reference/current/elasticsearch-keystore.html)). 
    
 7. Update `config/jvm.yml` - [ref](https://www.elastic.co/guide/en/elasticsearch/reference/current/heap-size.html)
-    ```bash
+    ```yaml
     -Xms2g
     -Xmx2g
    ```

@@ -94,7 +94,7 @@ Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [re
     timescaledb-tune
     ```
 3. Sample custom `postgresql.conf` on a 2cores-4GiB machine: 
-    ```bash
+    ```properties
     #------------------------------------------------------------------------------
     # CUSTOMIZED OPTIONS
     #------------------------------------------------------------------------------

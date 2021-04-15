@@ -35,7 +35,7 @@ Installation of `Kafka Connect via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - [r
     ```
 
 3. Update classpath for any kafka connectors. Add following piece of code in `bin/connect-distributed` after initializing `java_base_dir` variable. 
-    ```bash
+    ```properties
     # Classpath addition for any Kafka Connect connectors
     for library in $java_base_dir/kafka-connect-*; do
     classpath_prefix="$CLASSPATH:"
@@ -47,7 +47,7 @@ Installation of `Kafka Connect via Confluent 5.4.0` on `Ubuntu 18.04.3 LTS` - [r
     ```
 
 4. Update `etc/kafka/connect-distributed.properties`
-    ```bash
+    ```properties
     bootstrap.servers=10.11.18.58:9092,10.11.18.59:9092,10.11.18.60:9092
     group.id=connect-cluster
     offset.storage.replication.factor=3

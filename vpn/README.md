@@ -29,7 +29,7 @@ Installation of `OpenVPN 2.4.4` on `Ubuntu 18.04.3 LTS` - [ref](https://github.c
     ```
    
 3. Copy sample and update `ldap.conf`  
-    ```bash
+    ```properties
     # Copy the sample conf that came with installation to auth directory
     cp /usr/share/doc/openvpn-auth-ldap/examples/auth-ldap.conf /etc/openvpn/auth/ldap.conf
 
@@ -56,7 +56,7 @@ Installation of `OpenVPN 2.4.4` on `Ubuntu 18.04.3 LTS` - [ref](https://github.c
     ```
 
 4. Update `server.conf` as the sample shown
-    ```bash
+    ```properties
    ;local <vpn-server's-private-ip>
    port 1194
    proto udp
@@ -131,7 +131,7 @@ Installation of `OpenVPN 2.4.4` on `Ubuntu 18.04.3 LTS` - [ref](https://github.c
    ```
 
 5. Add following keys in the `client.ovpn` file
-    ```bash
+    ```properties
     key-direction 1
     
     # For ldap auth
