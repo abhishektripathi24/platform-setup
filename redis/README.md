@@ -112,7 +112,7 @@ Installation of `Redis 5.0.7` on `Ubuntu 18.04.3 LTS` - [ref](https://github.com
         
         > Moral of the story: Each sentinel node should have unique id in the sentinel cluster and this id is generated automatically by sentinel process itself.
 
-`5. Start the process on each server
+5. Start the process on each server
     ```bash
     ./src/redis-server redis.conf
     ./src/redis-sentinel sentinel.conf

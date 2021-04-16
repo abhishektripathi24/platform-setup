@@ -26,7 +26,7 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
         cd /opt/presto
         mkdir etc
        ```
-    * Create `etc/node.properties` for node specific properties
+    * Create `etc/node.properties` for node specific properties (Prefer to use an externally mounted data directory at `/data`)
         * At Coordinator Node:
             ```properties
             node.environment=production
@@ -38,8 +38,7 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
             node.environment=production
             node.id=presto-prod-worker-1
             node.data-dir=/data/presto/data
-            ```
-            NOTE: Prefer to use an externally mounted data directory at `/data`.
+            ``` 
     * Create `etc/jvm.config` for jvm specific properties
         ```properties
         -server
@@ -100,7 +99,7 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
             connection-password=secret
             ```
 
-3. Start the process
+3. Start the process on each server
     * Foreground
         ```bash
         bin/launcher start

@@ -68,6 +68,7 @@ Installation of `Apache Airflow 1.10.3` on `Ubuntu 18.04.3 LTS` - [ref](https://
             - apache-airflow[s3]==1.10.3
             - apache-airflow[redis]==1.10.3
         ```
+      
 3. Setup Airflow master node with celery worker
     ```bash
     export AIRFLOW_HOME=/opt/airflow
