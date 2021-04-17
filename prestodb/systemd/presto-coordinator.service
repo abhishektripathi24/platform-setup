@@ -6,8 +6,8 @@ After=network.target
 
 [Service]
 Type=forking
-User=preseto
-Group=preseto
+User=presto
+Group=presto
 ExecStart=/opt/presto-server/bin/launcher start
 ExecStop=/opt/presto-server/bin/launcher stop
 Restart=on-failure

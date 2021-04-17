@@ -1,7 +1,7 @@
 # Prestodb [Cluster Setup]
 <img src="https://github.com/abhishektripathi24/platform-setup/blob/master/prestodb/images/presto-logo.png" width="400" height="200"/>
 
-To know more about presto, visit https://prestodb.io/
+To know more about Presto, visit https://prestodb.io/
 
 ## Overview
 From the official docs -
