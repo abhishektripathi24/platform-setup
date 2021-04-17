@@ -1,5 +1,5 @@
-# Presto [Cluster Setup]
-<img src="https://github.com/abhishektripathi24/platform-setup/blob/master/presto/images/presto-logo.png" width="400" height="200"/>
+# Prestodb [Cluster Setup]
+<img src="https://github.com/abhishektripathi24/platform-setup/blob/master/prestodb/images/presto-logo.png" width="400" height="200"/>
 
 To know more about presto, visit https://prestodb.io/
 
@@ -137,6 +137,25 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
     * Verify runtime query stats via Web Interface available at `http://localhost:8080`
        
 5. If you linux distro supports systemd, you can supervise presto process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+
+## Monitoring
+* Monitoring using metrics exposed by [JMX Exporter](https://github.com/prometheus/jmx_exporter):
+    * Download the jar
+        ```bash
+         mkdir /opt/jmx-exporter && cd /opt/jmx-exporter 
+         wget https://repo1.maven.org/maven2/io/prometheus/jmx/jmx_prometheus_javaagent/0.15.0/jmx_prometheus_javaagent-0.15.0.jar
+         touch /opt/jmx-exporter/exporter_config.yaml 
+        ```
+    * Update `presto/etc/jvm.config` to include the `javaagent`
+        ```bash
+        -javaagent:/opt/jmx-exporter/jmx_prometheus_javaagent-0.15.0.jar=9090:/opt/jmx-exporter/exporter_config.yaml 
+        ```
+    * Restart the presto server.
+    * Metrics will now be accessible at `http://localhost:9090/metrics`
+    * A sample grafana dashboard is available [here](monitoring).
+    * Dashboard constituents version -
+        * Grafana - `Grafana v5.3.4 (69630b9)`
+        * Telegraf - `Telegraf 1.13.1 (git: HEAD 0c175724)`
 
 ## References
 * https://prestodb.io/docs/current/installation/deployment.html

@@ -407,6 +407,9 @@ NOTE: For setting up streaming replication and production grade configuration, r
         * https://github.com/influxdata/telegraf/tree/master/plugins/inputs/postgresql_extensible
         * https://www.postgresql.org/docs/10/monitoring-stats.html
     * Sample configuration can be found [here](monitoring/telegraf.conf).
+    * Dashboard constituents version -
+        * Grafana - `Grafana v5.3.4 (69630b9)`
+        * Telegraf - `Telegraf 1.13.1 (git: HEAD 0c175724)`
 
 2. Performance monitoring - [PgHero](https://github.com/ankane/pghero) 
     * Linux setup guide: https://github.com/ankane/pghero/blob/master/guides/Linux.md
