@@ -137,3 +137,6 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
     * Verify runtime query stats via Web Interface available at `http://localhost:8080`
        
 5. If you linux distro supports systemd, you can supervise presto process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+
+## References
+* https://prestodb.io/docs/current/installation/deployment.html

@@ -3,26 +3,43 @@ This repo contains guidelines and steps for setting up in-house production infra
 
 ## Data Engineering Stack 
 * CDC Pipelines
-    * [Apache Zookeeper](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-zookeeper)
-    * [Apache Kafka](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-kafka)
-    * [Confluent Inc. Kafka Connect](https://github.com/abhishektripathi24/platform-setup/tree/master/confluentinc-kafka-connect)
-    * [Confluent Inc. Schema Registry](https://github.com/abhishektripathi24/platform-setup/tree/master/confluentinc-schema-registry)    
+    * High-performance coordination service for distributed applications:
+        * [Apache Zookeeper](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-zookeeper)
+    * Distributed event streaming platform: 
+        * [Apache Kafka](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-kafka)
+    * Distributed framework to stream data into and out of Apache kafka:
+        * [Confluent Inc. Kafka Connect](https://github.com/abhishektripathi24/platform-setup/tree/master/confluentinc-kafka-connect)
+    * Distributed registry to store kafka-payload's schemas:  
+        * [Confluent Inc. Schema Registry](https://github.com/abhishektripathi24/platform-setup/tree/master/confluentinc-schema-registry)    
     
 * Databases
-    * Relational: [PostgreSQL](https://github.com/abhishektripathi24/platform-setup/tree/master/postgres), [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale), [Mysql](https://github.com/abhishektripathi24/platform-setup/tree/master/mysql)
-    * Document: [MongoDB](https://github.com/abhishektripathi24/platform-setup/tree/master/mongo)
-    * Key-value: [Redis](https://github.com/abhishektripathi24/platform-setup/tree/master/redis) 
-    * Graph: [Neo4j](https://github.com/abhishektripathi24/platform-setup/tree/master/neo4j)
-    * Time-Series: [Prometheus](https://github.com/abhishektripathi24/platform-setup/tree/master/prometheus) (NoSQL), [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale) (SQL)
+    * Relational:
+        * [PostgreSQL](https://github.com/abhishektripathi24/platform-setup/tree/master/postgres)
+        * [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale) 
+        * [Mysql](https://github.com/abhishektripathi24/platform-setup/tree/master/mysql)
+    * Document:
+        * [MongoDB](https://github.com/abhishektripathi24/platform-setup/tree/master/mongo)
+    * Key-value:
+        * [Redis](https://github.com/abhishektripathi24/platform-setup/tree/master/redis) 
+    * Graph:
+        * [Neo4j](https://github.com/abhishektripathi24/platform-setup/tree/master/neo4j)
+    * Time Series:
+        * [Prometheus](https://github.com/abhishektripathi24/platform-setup/tree/master/prometheus) (NoSQL)
+        * [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale) (SQL)
     
-* Workflow management
+* Distributed Workflow Management
     * [Apache Airflow](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-airflow)
     
-* Big Data Processing
-    * [Apache Spark](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-spark)
-    * [Presto](https://github.com/abhishektripathi24/platform-setup/tree/master/presto)
+* Big Data
+    * Distributed SQL Query Engine on any data storage:
+        * [Prestodb](https://github.com/abhishektripathi24/platform-setup/tree/master/prestodb)
+        * [PrestoSQL/Trino](https://github.com/abhishektripathi24/platform-setup/tree/master/trino)
+    * Distributed & Resilient Data Processing framework:
+        * [Apache Spark](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-spark)
+    * SQL on HDFS:
+        * [Apache Hive]()
     
-* Search engines
+* Search Engines
     * [Elasticsearch](https://github.com/abhishektripathi24/platform-setup/tree/master/elasticsearch)
     
 * Centralized Logging
@@ -46,8 +63,10 @@ This repo contains guidelines and steps for setting up in-house production infra
     * [Grafana](https://github.com/abhishektripathi24/platform-setup/tree/master/grafana)
     * [Prometheus](https://github.com/abhishektripathi24/platform-setup/tree/master/prometheus)
 
-* SSL Certs, Load balancing & Reverse Proxying
+* SSL Certs
     * [Let's Encrypt](https://github.com/abhishektripathi24/platform-setup/tree/master/letsencrypt/)
+
+* Load balancing & Reverse Proxying
     * [NGINX](https://github.com/abhishektripathi24/platform-setup/tree/master/nginx/)
     
 * VPN
