@@ -11,7 +11,19 @@ From the official docs -
 ## Setup
 Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.io/docs/current/installation/deployment.html)
 
-1. Download the Presto server tarball and unpack it - [ref](https://prestodb.io/download.html)
+1. Install Java8
+    ```bash
+    sudo apt update
+    sudo apt install openjdk-8-jdk openjdk-8-jre
+    java -version
+    ```
+
+2. Install python (required by the bin/launcher script only)
+    ```bash
+    any version 2.6.x, 2.7.x, or 3.x
+    ``` 
+
+3. Download the Presto server tarball and unpack it - [ref](https://prestodb.io/download.html)
     ```bash
     cd /opt
     wget https://repo1.maven.org/maven2/com/facebook/presto/presto-server/0.250/presto-server-0.250.tar.gz
@@ -20,7 +32,7 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
     cd presto
     ```
 
-2. Configure presto through following properties - [ref](https://prestodb.io/docs/current/installation/deployment.html)
+4. Configure presto through following properties - [ref](https://prestodb.io/docs/current/installation/deployment.html)
     * Create `etc` directory inside presto
         ```bash
         cd /opt/presto
@@ -99,7 +111,7 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
             connection-password=secret
             ```
 
-3. Start the process on each server
+5. Start the process on each server
     * Foreground
         ```bash
         bin/launcher start
@@ -115,7 +127,7 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
         /data/presto/data/var/log/http-request.log
         ```
 
-4. Presto CLI for terminal-based interactive shell
+6. Presto CLI for terminal-based interactive shell
     * Download `presto-cli.jar` and rename it to presto - [ref](https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/0.250/presto-cli-0.250-executable.jar) 
         ```bash
         wget https://repo1.maven.org/maven2/com/facebook/presto/presto-cli/0.250/presto-cli-0.250-executable.jar
@@ -136,7 +148,7 @@ Installation of `Presto 0.250` on `Ubuntu 18.04.3 LTS` - [ref](https://prestodb.
         ```
     * Verify runtime query stats via Web Interface available at `http://localhost:8080`
        
-5. If you linux distro supports systemd, you can supervise presto process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
+7. If you linux distro supports systemd, you can supervise presto process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
 
 ## Monitoring
 * Monitoring using metrics exposed by [JMX Exporter](https://github.com/prometheus/jmx_exporter):

@@ -13,7 +13,7 @@ Installation of `Elasticsearch 7.6` on `Ubuntu 18.04.3 LTS` - [ref](https://www.
 
 1. Install Java
  
-    **NOTE:** Elasticsearch binary comes with a packaged java distribution so explicit java installation is not required..
+    **NOTE:** Elasticsearch binary comes with a packaged java distribution so explicit java installation is not required.
 
 2. Download and extract standalone linux binary - [ref](https://www.elastic.co/guide/en/elastic-stack-get-started/7.6/get-started-elastic-stack.html#install-elasticsearch)
     ```bash
