@@ -1,7 +1,7 @@
 # Linux Utilities
 <img src="https://github.com/abhishektripathi24/platform-setup/blob/master/linux/images/linux-logo.png" width="430" height="200"/>
 
-To know more about linux, visit https://www.linux.org/
+To know more about Linux, visit https://www.linux.org/
 
 ## Overview
 From the official docs -

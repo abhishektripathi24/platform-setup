@@ -1,7 +1,7 @@
 # PostgreSQL [Master-Slave Setup]
 <img src="https://github.com/abhishektripathi24/platform-setup/blob/master/postgres/images/postgresql-logo.png" width="200" height="200"/>
 
-To know more about postgresql, visit https://www.postgresql.org/
+To know more about Postgresql, visit https://www.postgresql.org/
 
 ## Overview
 From the official docs -

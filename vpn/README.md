@@ -1,7 +1,7 @@
 # OpenVPN [Single Node Setup]
 <img src="https://github.com/abhishektripathi24/platform-setup/blob/master/vpn/images/openvpn-logo.png" width="550" height="120"/>
 
-To know more about openvpn, visit https://openvpn.net/
+To know more about Openvpn, visit https://openvpn.net/
 
 ## Overview
 From the official docs -

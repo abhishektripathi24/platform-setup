@@ -1,7 +1,7 @@
 # MySql [Master-Slave Setup]
 <img src="https://github.com/abhishektripathi24/platform-setup/blob/master/mysql/images/mysql-logo.png" width="300" height="200"/>
 
-To know more about mysql, visit https://dev.mysql.com/
+To know more about Mysql, visit https://dev.mysql.com/
 
 ## Overview
 
