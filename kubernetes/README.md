@@ -698,7 +698,67 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         serviceSubnet: 10.96.0.0/12
         ```
         
-4. Detach a node out from cluster -
+4. Renew internal kubernetes certificates after 1 year, run following on control-panel 
+    *  Check for expiry
+        ```bash
+        sudo kubeadm alpha certs check-expiration
+       
+        # Sample output
+        [check-expiration] Reading configuration from the cluster...
+        [check-expiration] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
+        
+        CERTIFICATE                EXPIRES                  RESIDUAL TIME        CERTIFICATE AUTHORITY   EXTERNALLY MANAGED
+        admin.conf                 Apr 23, 2022 11:40 UTC   <INVALID>                                    no
+        apiserver                  Apr 23, 2022 11:40 UTC   <INVALID>            ca                      no
+        apiserver-etcd-client      Apr 23, 2022 11:40 UTC   <INVALID>            etcd-ca                 no
+        apiserver-kubelet-client   Apr 23, 2022 11:40 UTC   <INVALID>            ca                      no
+        controller-manager.conf    Apr 23, 2022 11:40 UTC   <INVALID>                                    no
+        etcd-healthcheck-client    Apr 23, 2022 11:40 UTC   <INVALID>            etcd-ca                 no
+        etcd-peer                  Apr 23, 2022 11:40 UTC   <INVALID>            etcd-ca                 no
+        etcd-server                Apr 23, 2022 11:40 UTC   <INVALID>            etcd-ca                 no
+        front-proxy-client         Apr 23, 2022 11:40 UTC   <INVALID>            front-proxy-ca          no
+        scheduler.conf             Apr 23, 2022 11:40 UTC   <INVALID>                                    no
+        
+        CERTIFICATE AUTHORITY   EXPIRES                  RESIDUAL TIME   EXTERNALLY MANAGED
+        ca                      Apr 21, 2030 10:45 UTC   8y              no
+        etcd-ca                 Apr 21, 2030 10:45 UTC   8y              no
+        front-proxy-ca          Apr 21, 2030 10:45 UTC   8y              no
+        ```
+    * Renew all certs
+        ```bash
+        sudo kubeadm alpha certs renew all
+        ```
+    * Restart kubelet
+        ```bash
+        sudo systemctl restart kubelet
+        ```
+    *  Check for expiry
+        ```bash
+        sudo kubeadm alpha certs check-expiration
+       
+        # Sample output
+        [check-expiration] Reading configuration from the cluster...
+        [check-expiration] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -oyaml'
+        
+        CERTIFICATE                EXPIRES                  RESIDUAL TIME   CERTIFICATE AUTHORITY   EXTERNALLY MANAGED
+        admin.conf                 Apr 23, 2022 11:40 UTC   362d                                    no
+        apiserver                  Apr 23, 2022 11:40 UTC   362d            ca                      no
+        apiserver-etcd-client      Apr 23, 2022 11:40 UTC   362d            etcd-ca                 no
+        apiserver-kubelet-client   Apr 23, 2022 11:40 UTC   362d            ca                      no
+        controller-manager.conf    Apr 23, 2022 11:40 UTC   362d                                    no
+        etcd-healthcheck-client    Apr 23, 2022 11:40 UTC   362d            etcd-ca                 no
+        etcd-peer                  Apr 23, 2022 11:40 UTC   362d            etcd-ca                 no
+        etcd-server                Apr 23, 2022 11:40 UTC   362d            etcd-ca                 no
+        front-proxy-client         Apr 23, 2022 11:40 UTC   362d            front-proxy-ca          no
+        scheduler.conf             Apr 23, 2022 11:40 UTC   362d                                    no
+        
+        CERTIFICATE AUTHORITY   EXPIRES                  RESIDUAL TIME   EXTERNALLY MANAGED
+        ca                      Apr 21, 2030 10:45 UTC   8y              no
+        etcd-ca                 Apr 21, 2030 10:45 UTC   8y              no
+        front-proxy-ca          Apr 21, 2030 10:45 UTC   8y              no
+        ```  
+
+5. Detach a node out from cluster
     * On control-panel
         ```bash
         kubectl drain <node name> --delete-local-data --force --ignore-daemonsets
@@ -709,8 +769,8 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         ```bash
         kubeadm reset
         ```
-        
-5. Disaster recovery
+ 
+6. Disaster recovery
     ```bash
     # Remove manifests in kubernetes directory on control-panel node (if the same node is being reset)
     sudo rm -rf /etc/kubernetes/manifests
@@ -722,7 +782,7 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
     ...
     ```
 
-6. Completely uninstall kubernetes cluster and its components
+7. Completely uninstall kubernetes cluster and its components
     ```bash
     kubeadm reset
     sudo apt-get purge kubeadm kubectl kubelet kubernetes-cni kube*   
