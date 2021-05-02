@@ -13,19 +13,20 @@ This repo contains guidelines and steps for setting up in-house production infra
         * [Confluent Inc. Schema Registry](https://github.com/abhishektripathi24/platform-setup/tree/master/confluentinc-schema-registry)    
     
 * Databases
-    * Relational:
+    * SQL/RDBMS:
         * [PostgreSQL](https://github.com/abhishektripathi24/platform-setup/tree/master/postgres)
         * [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale) 
         * [Mysql](https://github.com/abhishektripathi24/platform-setup/tree/master/mysql)
-    * Document:
-        * [MongoDB](https://github.com/abhishektripathi24/platform-setup/tree/master/mongo)
-    * Key-value:
-        * [Redis](https://github.com/abhishektripathi24/platform-setup/tree/master/redis) 
-    * Graph:
-        * [Neo4j](https://github.com/abhishektripathi24/platform-setup/tree/master/neo4j)
-    * Time Series:
-        * [Prometheus](https://github.com/abhishektripathi24/platform-setup/tree/master/prometheus) (NoSQL)
-        * [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale) (SQL)
+    * NoSQL
+        * Document:
+            * [MongoDB](https://github.com/abhishektripathi24/platform-setup/tree/master/mongo)
+        * Key-value:
+            * [Redis](https://github.com/abhishektripathi24/platform-setup/tree/master/redis) 
+        * Graph:
+            * [Neo4j](https://github.com/abhishektripathi24/platform-setup/tree/master/neo4j)
+        * Time Series:
+            * [Prometheus](https://github.com/abhishektripathi24/platform-setup/tree/master/prometheus) (NoSQL)
+            * [Timescale](https://github.com/abhishektripathi24/platform-setup/tree/master/timescale) (SQL)
     
 * Distributed Workflow Management
     * [Apache Airflow](https://github.com/abhishektripathi24/platform-setup/tree/master/apache-airflow)
