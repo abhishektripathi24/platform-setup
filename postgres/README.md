@@ -357,45 +357,61 @@ NOTE: For setting up streaming replication and production grade configuration, r
     SHOW seq_page_cost;   
     ```
    
-6. Replication status
+6. Replication monitoring
     ```postgresql
-    select pg_last_xact_replay_timestamp();
-    select pg_last_wal_receive_lsn();
-    select pg_last_wal_replay_lsn();
-    select pg_last_wal_receive_lsn();
-    select pg_last_wal_replay_lsn();
-    select now()-pg_last_xact_replay_timestamp() as replication_lag;
+   -- PostgreSQL >= 10 then use "wal_lsn"
+   -- PostgreSQL <  10 then use "xlog_location"
+       
+   -- Master
+   select * from pg_stat_replication;
+   select * from pg_replication_slots;
+   select pg_current_wal_lsn();
     
+   -- Replica
+   select pg_is_in_recovery(); -- check if replica in standby_mode
+   select pg_last_wal_receive_lsn();
+   select pg_last_wal_replay_lsn();
+   select pg_last_xact_replay_timestamp();
+   select now()-pg_last_xact_replay_timestamp() as replication_lag;
+     
+    -- on main
+    select * from pg_stat_replication;
+    select * from pg_replication_slots;
+ 
+    -- on main compare WAL status using lsn diff
+    select pg_wal_lsn_diff('0/23000738','0/230001B0');
     
-     pg_last_xact_replay_timestamp
-    -------------------------------
-     2021-03-04 06:02:32.54961+00
-    (1 row)
+    -- on main query to track lag in bytes
+    -- sending_lag could indicate heavy load on primary
+    -- receiving_lag could indicate network issues or replica under heavy load
+    -- replaying_lag could indicate replica under heavy load
+    select
+      pid,
+      application_name,
+      pg_wal_lsn_diff(pg_current_wal_lsn(), sent_lsn) sending_lag,
+      pg_wal_lsn_diff(sent_lsn, flush_lsn) receiving_lag,
+      pg_wal_lsn_diff(flush_lsn, replay_lsn) replaying_lag,
+      pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) total_lag
+    from pg_stat_replication;
+   
+   -- Size of lag in a replication slot
+   SELECT
+      slot_name,
+      pg_size_pretty(pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn)) AS replication_slot_lag, 
+      active 
+   FROM pg_replication_slots;
     
-     pg_last_wal_receive_lsn
-    -------------------------
-     2F38/BF598000
-    (1 row)
+    -- on replica can check replica locations or timing
+    --   pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn(), pg_last_xact_replay_timestamp()
+    SELECT
+      CASE
+        WHEN pg_last_wal_receive_lsn() = pg_last_wal_replay_lsn()
+        THEN 0
+        ELSE EXTRACT (EPOCH FROM now() - pg_last_xact_replay_timestamp())
+        END AS replication_lag;
     
-     pg_last_wal_replay_lsn
-    ------------------------
-     2F38/BF597E38
-    (1 row)
-    
-     pg_last_wal_receive_lsn
-    -------------------------
-     2F38/BF5B4000
-    (1 row)
-    
-     pg_last_wal_replay_lsn
-    ------------------------
-     2F38/BF5B3240
-    (1 row)
-    
-     replication_lag
-    -----------------
-     00:00:00.357847
-    (1 row)
+    -- Want to know what file a lsn refers to?
+    select pg_walfile_name(pg_current_wal_lsn());
     ```
 
 ## Monitoring
@@ -426,3 +442,9 @@ NOTE: For setting up streaming replication and production grade configuration, r
 
 4. Connection Pooling - [PgBouncer](https://github.com/pgbouncer/pgbouncer)
     * Linux setup guide: https://tech.willandskill.se/how-to-setup-pgbouncer-on-ubuntu-18-04-lts/
+    
+
+# References
+* https://www.scalingpostgres.com/tutorials/postgresql-replication-monitoring/
+* https://dba.stackexchange.com/questions/229274/how-do-i-cleanup-postgres-wal
+* https://stackoverflow.com/questions/49539938/postgres-wal-file-not-getting-deleted

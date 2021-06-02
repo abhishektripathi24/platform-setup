@@ -84,7 +84,7 @@ Installation of `Timescale 1.2.2 over Postgres 10` on `Ubuntu 18.04.3 LTS` - [re
         4. Restart PostgreSQL
         
 ## Misc
-1. Delete wals on master node which are older than n days: [n=5]
+1. Delete archived wals on master node which are older than n days: [n=5]
     ```bash
     crontab -e
     30 05 1-31/3 * * find /data/postgresql/postgresql/10/main/pg_wal_archive -mtime +3 -delete
