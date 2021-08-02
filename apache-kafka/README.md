@@ -73,21 +73,23 @@ Installation of `Apache Kafka 2.4.0` on `Ubuntu 18.04.3 LTS` - [ref](https://kaf
  7. If your linux distro supports systemd, you can supervise kafka process under it. The corresponding systemd service file is present in this repo at [this](systemd) location.
  
 ## Usage
-* Topic
+* <strong>Topic</strong>
     * <strong>Create topic:</strong> ./bin/kafka-topics.sh --create --zookeeper localhost:2181/kafka --replication-factor 1 --partitions 1 --topic topic-name
     * <strong>List topic:</strong> ./bin/kafka-topics.sh --list --zookeeper localhost:2181/kafka
     * <strong>Describe topic:</strong> ./bin/kafka-topics.sh --zookeeper localhost:2181/kafka --describe --topic topic-name
     * <strong>Delete topic:</strong> ./bin/kafka-topics.sh --zookeeper localhost:2181/kafka --delete --topic topic-name
-    * <strong>Get size of topic:</strong> ./bin/kafka-log-dirs  --bootstrap-server localhost:9092  --topic-list topic-name --describe  | grep '^{' | jq '[ ..|.size? | numbers ] | add'
-* Producer
+    * <strong>Get topic config:</strong> ./bin/kafka-configs.sh --describe --zookeeper localhost:2181/kafka --entity-type topics --entity-name topic-name
+    * <strong>Get size of topic:</strong> ./bin/kafka-log-dirs.sh  --bootstrap-server localhost:9092  --topic-list topic-name --describe  | grep '^{' | jq '[ ..|.size? | numbers ] | add'
+    * <strong>Change max payload size:</strong> ./bin/kafka-configs.sh --zookeeper localhost:2181/kafka --entity-type topics --entity-name topic-name --alter --add-config max.message.bytes=10485760
+* <strong>Producer</strong>
     * <strong>Console producer without key:</strong> ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic-name
     * <strong>Console producer with key:</strong> ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic-name --property "parse.key=true" --property "key.separator=:"
-* Consumer
+* <strong>Consumer</strong>
     * <strong>Console consumer with key:</strong> ./bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name --from-beginning --property print.key=true
     * <strong>Avro Console consumer without key:</strong> ./bin/kafka-avro-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name --from-beginning --property schema.registry.url="http://localhost:8081"
     * <strong>Avro Console consumer with key as avro:</strong> ./bin/kafka-avro-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name --from-beginning --property schema.registry.url="http://localhost:8081" --property print.key=true
     * <strong>Avro Console consumer with key as string:</strong> ./bin/kafka-avro-console-consumer.sh --bootstrap-server localhost:9092 --topic topic-name --from-beginning --property schema.registry.url="http://localhost:8081" --property print.key=true --key-deserializer=org.apache.kafka.common.serialization.StringDeserializer 
-* Consumer-group
+* <strong>Consumer-group</strong>
     * <strong>Describe consumer group:</strong> ./bin/kafka-consumer-groups.sh --bootstrap-server localhost:9092 --describe --group consumer-group-name
  
 ## References
