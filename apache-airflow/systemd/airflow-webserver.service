@@ -7,6 +7,8 @@ Wants=network.target
 Type=simple
 User=airflow
 Group=airflow
+RuntimeDirectory=airflow
+RuntimeDirectoryMode=0775
 Environment=AIRFLOW_HOME=/opt/airflow
 ExecStart=/bin/bash -c 'source /opt/miniconda3/bin/activate airflow && $(which airflow) webserver --pid /run/airflow/webserver.pid'
 ExecReload=/bin/kill -s HUP $MAINPID

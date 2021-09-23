@@ -64,9 +64,9 @@ From the official docs -
         sudo mount -a
         df -h
         ```
-    * Extent volume
+    * Extend volume - [ref](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/recognize-expanded-volume-linux.html)
         ```bash
-        # 1. If the volume has a partition, extend it first
+        # 1. Check if the volume has a partition
         [ec2-user ~]$ lsblk
         NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
         nvme1n1       259:0    0  30G  0 disk /data
@@ -74,11 +74,10 @@ From the official docs -
         └─nvme0n1p1   259:2    0   8G  0 part /
         └─nvme0n1p128 259:3    0   1M  0 part
 
-        ---
+        # 2. If the volume has a partition, extend it first (here 1 in the end is the partition number) 
         sudo growpart /dev/nvme0n1 1
-        ---
   
-        # Sample output
+        # 3. Verify
         [ec2-user ~]$ lsblk
         NAME          MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
         nvme1n1       259:0    0  30G  0 disk /data
@@ -86,36 +85,33 @@ From the official docs -
         └─nvme0n1p1   259:2    0  16G  0 part /
         └─nvme0n1p128 259:3    0   1M  0 part
 
-
-        # 2.1. Extend the file system
+        # 4. Check if the filesystem to be extended is ext4
         [ec2-user ~]$ df -h
         Filesystem       Size  Used Avail Use% Mounted on
         /dev/xvda1       8.0G  1.9G  6.2G  24% /
         /dev/xvdf1       8.0G   45M  8.0G   1% /data
         
-        ---
+        # 4.1 Extend an ext4 file system
         sudo resize2fs /dev/xvda1
-        ---
         
+        # 4.1.1 Verify
         [ec2-user ~]$ df -h
         Filesystem       Size  Used Avail Use% Mounted on
         /dev/xvda1        16G  1.9G  14G  12% /
         /dev/xvdf1        30G   45M  30G   1% /data
 
-        # 2.2 Extend an XFS file system
+        # 5. Check if filesystem to be extended is xfs
         [ec2-user ~]$ df -h
         Filesystem       Size  Used Avail Use% Mounted on
         /dev/nvme0n1p1   8.0G  1.6G  6.5G  20% /
         /dev/nvme1n1     8.0G   33M  8.0G   1% /data
-
-        ---
+        
+        # 5.1 Extend an XFS file system
         sudo xfs_growfs -d /
         sudo xfs_growfs -d /data
 
         # If above command fails, install the XFS tools as it's not installed
         sudo yum install xfsprogs 
-        ---
-  
         ```
 
 3. Host configuration
