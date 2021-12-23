@@ -567,6 +567,10 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         * Deploy a patch and add the line `serviceAccount: tiller` to `spec.template.spec`
             ```bash
             kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"tiller"}}}}'
+            
+            # Otherwise following error will popup
+            Error: configmaps is forbidden: User "system:serviceaccount:kube-system:default" cannot list resource "configmaps" in API group "" in the namespace "kube-system"
+
             ```
 
 ## Misc
