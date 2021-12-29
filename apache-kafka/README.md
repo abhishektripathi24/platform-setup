@@ -81,6 +81,23 @@ Installation of `Apache Kafka 2.4.0` on `Ubuntu 18.04.3 LTS` - [ref](https://kaf
     * <strong>Get topic config:</strong> ./bin/kafka-configs.sh --describe --zookeeper localhost:2181/kafka --entity-type topics --entity-name topic-name
     * <strong>Get size of topic:</strong> ./bin/kafka-log-dirs.sh  --bootstrap-server localhost:9092  --topic-list topic-name --describe  | grep '^{' | jq '[ ..|.size? | numbers ] | add'
     * <strong>Change max payload size:</strong> ./bin/kafka-configs.sh --zookeeper localhost:2181/kafka --entity-type topics --entity-name topic-name --alter --add-config max.message.bytes=10485760
+    * <strong>Change topic partition:</strong> ./bin/kafka-configs.sh --zookeeper localhost:2181/kafka --alter --topic topic-name --partitions 6
+    * <strong>Change topic replication factor:</strong>
+        * Describe the topic to get the current brokers of the replicas. Let's say there are 2 partitions (with 1 replica each) residing on broker 0 and 2.
+        * Configure new replica assignment in a JSON file - In the below JSON file `increase-replication-factor.json` we don’t specify the new replication factor, instead we specify partition 0 will be stored in broker 0, 1 and 2 there by increasing the replication factor to 3 -
+            ```json
+                {
+                    "version":1,
+                    "partitions":[
+                        {"topic":"topic-name","partition":0,"replicas":[0,1,2]},
+                        {"topic":"topic-name","partition":1,"replicas":[2,3,4]}
+                    ]
+                }
+            ```
+        * Execute kafka-reassign-partitions to reassign/change replicas of partitions -
+            * ./bin/kafka-reassign-partitions.sh --zookeeper localhost:2181/kafka --reassignment-json-file increase-replication-factor.json --execute
+            * ./bin/kafka-reassign-partitions.sh --zookeeper localhost:2181/kafka --reassignment-json-file increase-replication-factor.json --verify
+        * Verify the new state using topic describe command.
 * <strong>Producer</strong>
     * <strong>Console producer without key:</strong> ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic-name
     * <strong>Console producer with key:</strong> ./bin/kafka-console-producer.sh --broker-list localhost:9092 --topic topic-name --property "parse.key=true" --property "key.separator=:"
@@ -95,3 +112,4 @@ Installation of `Apache Kafka 2.4.0` on `Ubuntu 18.04.3 LTS` - [ref](https://kaf
 ## References
 * https://kafka.apache.org/quickstart
 * https://ronnieroller.com/kafka/cheat-sheet
+* https://kafka.apache.org/documentation/
