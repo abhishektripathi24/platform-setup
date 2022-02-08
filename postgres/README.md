@@ -155,132 +155,155 @@ NOTE: For setting up streaming replication and production grade configuration, r
 
 ## Administration
 1. User Management - [[pg-docs-create-user](https://www.postgresql.org/docs/12/sql-createuser.html), [pg-docs-grant](https://www.postgresql.org/docs/12/sql-grant.html), [AWS](https://aws.amazon.com/blogs/database/managing-postgresql-users-and-roles/), [Blog](https://tableplus.com/blog/2018/04/postgresql-how-to-grant-access-to-users.html)]
-    ```postgresql
-    -- Create Role
-    CREATE ROLE readonly WITH LOGIN PASSWORD 'test';
-    or
-    CREATE ROLE readonly;
-    ALTER ROLE readonly WITH LOGIN;
-    
-    -- Grant Read Role
-    GRANT CONNECT ON DATABASE test_db TO readonly;
-    \c test_db;
-    GRANT USAGE ON SCHEMA public TO readuser;
-    GRANT SELECT ON ALL TABLES IN SCHEMA public TO readuser;
-    GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO readuser;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readuser;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON SEQUENCES TO readuser;
-    
-    -- Drop Read Role
-    REVOKE CONNECT ON Database test FROM readonly;
-    \c test_db;
-    REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM readonly;
-    REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM readonly;
-    REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM readonly;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON TABLES FROM readonly;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON SEQUENCES FROM readonly;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON FUNCTIONS FROM readonly;
-    REVOKE ALL PRIVILEGES ON SCHEMA public FROM readonly;
-    REVOKE ALL PRIVILEGES ON DATABASE test FROM readonly;
-    REASSIGN OWNED BY readonly to postgres;
-    DROP OWNED BY readonly; - https://stackoverflow.com/questions/9840955/postgresql-drop-role-fails-because-of-default-privileges
-    DROP ROLE readonly;
-   
-    -- Alter Search Path at Role level -
-    ALTER ROLE username SET search_path = schema1,schema2,schema3,etc;
-    
-    ALTER ROLE myrole RESET search_path;
-    
-    SELECT r.rolname, d.datname, rs.setconfig
-    FROM   pg_db_role_setting rs
-    LEFT   JOIN pg_roles      r ON r.oid = rs.setrole
-    LEFT   JOIN pg_database   d ON d.oid = rs.setdatabase
-    WHERE  r.rolname = 'role_name' OR d.datname = 'mydb';
-   
-    -- ========================================================================
-    -- Sample production scenario - 
-    -- i) Create readonly, readwrite roles without login.
-    -- ii) Grant these roles to new users with login.
-    -- iii) PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_ROOT_USER $DATABASE -tAc "select * from rand;"
-    -- ========================================================================
- 
-    -- Revoke privileges from 'public' role
-    REVOKE CREATE ON SCHEMA public FROM PUBLIC;
-    REVOKE ALL ON DATABASE mydatabase FROM PUBLIC;
-    
-    -- Read-only role
-    CREATE ROLE readonly;
-    GRANT CONNECT ON DATABASE mydatabase TO readonly;
-    GRANT USAGE ON SCHEMA myschema TO readonly;
-    GRANT SELECT ON ALL TABLES IN SCHEMA myschema TO readonly;
-    GRANT SELECT ON ALL SEQUENCES IN SCHEMA myschema TO readonly;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT SELECT ON TABLES TO readonly;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT SELECT ON SEQUENCES TO readonly;
-    
-    -- Read/write role
-    CREATE ROLE readwrite;
-    GRANT CONNECT ON DATABASE mydatabase TO readwrite;
-    GRANT USAGE, CREATE ON SCHEMA myschema TO readwrite;
-    GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA myschema TO readwrite;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO readwrite;
-    GRANT USAGE ON ALL SEQUENCES IN SCHEMA myschema TO readwrite;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT USAGE ON SEQUENCES TO readwrite;
-    
-    -- User creation
-    CREATE USER reporting_user1 WITH LOGIN PASSWORD 'some_secret_passwd';
-    CREATE USER reporting_user2 WITH LOGIN  PASSWORD 'some_secret_passwd';
-    CREATE USER app_user1 WITH LOGIN PASSWORD 'some_secret_passwd';
-    CREATE USER app_user2 WITH LOGIN PASSWORD 'some_secret_passwd';
-    
-    -- User updation
-    ALTER USER reporting_user1 WITH PASSWORD 'new_password';
- 
-    -- Grant privileges to users
-    GRANT readonly TO reporting_user1;
-    GRANT readonly TO reporting_user2;
-    GRANT readwrite TO app_user1;
-    GRANT readwrite TO app_user2;
-   
-   -- Revoke privileges from users
-   REVOKE readonly FROM reporting_user1;
-   REVOKE readonly FROM reporting_user2;
-   REVOKE readwrite FROM app_user1;
-   REVOKE readwrite FROM app_user2;
+   * Role create/view/update/delete
+        ```postgresql
+        -- Create Role
+        CREATE ROLE readonly WITH LOGIN PASSWORD 'test';
+        or
+        CREATE ROLE readonly;
+        ALTER ROLE readonly WITH LOGIN;
 
-    -- Sample application user
- 
-    -- 1. Create role and grant permissions 
-    CREATE ROLE airflow WITH login PASSWORD 'airflow';
-    GRANT CONNECT ON DATABASE airflow TO airflow;
-    GRANT ALL PRIVILEGES ON SCHEMA public TO airflow;
-    GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO airflow;
-    GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO airflow;
-    GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO airflow;
-    --- The remaning ones are needed to extend permission of user airflow for future objects created by any user
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO airflow;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO airflow;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO airflow;
- 
-    -- 2. Make this role/user as the owner of the tables (if any), from postgres to airflow
-    ALTER TABLE table_name OWNER TO airflow;
-    
-    -- 3. Revoke previliges
-    REVOKE CONNECT ON DATABASE airflow FROM airflow;
-    REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM airflow;
-    REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM airflow;
-    REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM airflow;
-    REVOKE ALL PRIVILEGES ON SCHEMA public FROM airflow;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON TABLES FROM airflow;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON SEQUENCES FROM airflow;
-    ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON FUNCTIONS FROM airflow;
-    REASSIGN OWNED BY airflow to postgres;
-    DROP OWNED BY airflow;
-    DROP ROLE airflow;
-    
-    -- Misc
-    ALTER ROLE name RENAME TO new_name;
-    ALTER ROLE postgres WITH PASSWORD 'postgres';
-    ``` 
+        -- Grant Read Role
+        GRANT CONNECT ON DATABASE test_db TO readonly;
+        \c test_db;
+        GRANT USAGE ON SCHEMA public TO readuser;
+        GRANT SELECT ON ALL TABLES IN SCHEMA public TO readuser;
+        GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO readuser;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON TABLES TO readuser;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON SEQUENCES TO readuser;
+        
+        -- Drop Read Role
+        REVOKE CONNECT ON Database test FROM readonly;
+        \c test_db;
+        REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM readonly;
+        REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM readonly;
+        REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM readonly;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON TABLES FROM readonly;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON SEQUENCES FROM readonly;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON FUNCTIONS FROM readonly;
+        REVOKE ALL PRIVILEGES ON SCHEMA public FROM readonly;
+        REVOKE ALL PRIVILEGES ON DATABASE test FROM readonly;
+        REASSIGN OWNED BY readonly to postgres;
+        DROP OWNED BY readonly; - https://stackoverflow.com/questions/9840955/postgresql-drop-role-fails-because-of-default-privileges
+        DROP ROLE readonly;
+       
+        -- Alter Search Path at Role level -
+        ALTER ROLE username SET search_path = schema1,schema2,schema3,etc;
+        
+        ALTER ROLE myrole RESET search_path;
+        
+        SELECT r.rolname, d.datname, rs.setconfig
+        FROM   pg_db_role_setting rs
+        LEFT   JOIN pg_roles      r ON r.oid = rs.setrole
+        LEFT   JOIN pg_database   d ON d.oid = rs.setdatabase
+        WHERE  r.rolname = 'role_name' OR d.datname = 'mydb';
+       
+        -- ========================================================================
+        -- Sample production scenario - 
+        -- i) Create readonly, readwrite roles without login.
+        -- ii) Grant these roles to new users with login.
+        -- iii) PGPASSWORD=$DB_PASSWORD psql -h $DB_HOST -U $DB_ROOT_USER $DATABASE -tAc "select * from rand;"
+        -- ========================================================================
+     
+        -- Revoke privileges from 'public' role
+        REVOKE CREATE ON SCHEMA public FROM PUBLIC;
+        REVOKE ALL ON DATABASE mydatabase FROM PUBLIC;
+        
+        -- Read-only role
+        CREATE ROLE readonly;
+        GRANT CONNECT ON DATABASE mydatabase TO readonly;
+        GRANT USAGE ON SCHEMA myschema TO readonly;
+        GRANT SELECT ON ALL TABLES IN SCHEMA myschema TO readonly;
+        GRANT SELECT ON ALL SEQUENCES IN SCHEMA myschema TO readonly;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT SELECT ON TABLES TO readonly;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT SELECT ON SEQUENCES TO readonly;
+        
+        -- Read/write role
+        CREATE ROLE readwrite;
+        GRANT CONNECT ON DATABASE mydatabase TO readwrite;
+        GRANT USAGE, CREATE ON SCHEMA myschema TO readwrite;
+        GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA myschema TO readwrite;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO readwrite;
+        GRANT USAGE ON ALL SEQUENCES IN SCHEMA myschema TO readwrite;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA myschema GRANT USAGE ON SEQUENCES TO readwrite;
+        
+        -- User creation
+        CREATE USER reporting_user1 WITH LOGIN PASSWORD 'some_secret_passwd';
+        CREATE USER reporting_user2 WITH LOGIN  PASSWORD 'some_secret_passwd';
+        CREATE USER app_user1 WITH LOGIN PASSWORD 'some_secret_passwd';
+        CREATE USER app_user2 WITH LOGIN PASSWORD 'some_secret_passwd';
+        
+        -- User updation
+        ALTER USER reporting_user1 WITH PASSWORD 'new_password';
+     
+        -- Grant privileges to users
+        GRANT readonly TO reporting_user1;
+        GRANT readonly TO reporting_user2;
+        GRANT readwrite TO app_user1;
+        GRANT readwrite TO app_user2;
+       
+        -- Revoke privileges from users
+        REVOKE readonly FROM reporting_user1;
+        REVOKE readonly FROM reporting_user2;
+        REVOKE readwrite FROM app_user1;
+        REVOKE readwrite FROM app_user2;
+
+        -- Sample application user
+     
+        -- 1. Create role and grant permissions 
+        CREATE ROLE airflow WITH login PASSWORD 'airflow';
+        GRANT CONNECT ON DATABASE airflow TO airflow;
+        GRANT ALL PRIVILEGES ON SCHEMA public TO airflow;
+        GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO airflow;
+        GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO airflow;
+        GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO airflow;
+        --- The remaning ones are needed to extend permission of user airflow for future objects created by any user
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO airflow;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON SEQUENCES TO airflow;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON FUNCTIONS TO airflow;
+     
+        -- 2. Make this role/user as the owner of the tables (if any), from postgres to airflow
+        ALTER TABLE table_name OWNER TO airflow;
+        
+        -- 3. Revoke previliges
+        REVOKE CONNECT ON DATABASE airflow FROM airflow;
+        REVOKE ALL PRIVILEGES ON ALL TABLES IN SCHEMA public FROM airflow;
+        REVOKE ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public FROM airflow;
+        REVOKE ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public FROM airflow;
+        REVOKE ALL PRIVILEGES ON SCHEMA public FROM airflow;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON TABLES FROM airflow;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON SEQUENCES FROM airflow;
+        ALTER DEFAULT PRIVILEGES IN SCHEMA public REVOKE ALL PRIVILEGES ON FUNCTIONS FROM airflow;
+        REASSIGN OWNED BY airflow to postgres;
+        DROP OWNED BY airflow;
+        DROP ROLE airflow;
+        
+        -- Misc
+        ALTER ROLE name RENAME TO new_name;
+        ALTER ROLE postgres WITH PASSWORD 'postgres';
+        ``` 
+   * Show role grants/ownerships
+        ```postgresql
+        -- 1. Table permissions
+        select * from information_schema.role_table_grants where grantee='YOUR_USER';
+
+        -- 2. Ownerships
+        select * from pg_tables where tableowner = 'YOUR_USER';
+     
+        -- 3. Schema Permissions
+        select  
+           r.usename as grantor, e.usename as grantee, nspname, privilege_type, is_grantable
+        from pg_namespace
+        join lateral (
+              SELECT
+                *
+              from
+              aclexplode(nspacl) as x
+              ) a on true
+        join pg_user e on a.grantee = e.usesysid
+        join pg_user r on a.grantor = r.usesysid
+        where e.usename = 'YOUR_USER';
+        ```
 
 2. Dump and restore
     ```bash

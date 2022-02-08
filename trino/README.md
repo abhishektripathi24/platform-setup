@@ -87,6 +87,10 @@ Installation of `Trino 355` on `Ubuntu 18.04.3 LTS` - [ref](https://trino.io/doc
             query.max-total-memory-per-node=2GB
             discovery-server.enabled=true
             discovery.uri=http://localhost:8080
+            
+            # To enable WebUI with SSL termination at proxy/lb
+            http-server.authentication.type=PASSWORD
+            http-server.process-forwarded=true
             ```
         * At Worker Node:
             ```properties
