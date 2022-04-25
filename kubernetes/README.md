@@ -760,7 +760,14 @@ Installation of `Kubernetes 1.17.2` on `Ubuntu 18.04.3 LTS` using `kubeadm` - [r
         ca                      Apr 21, 2030 10:45 UTC   8y              no
         etcd-ca                 Apr 21, 2030 10:45 UTC   8y              no
         front-proxy-ca          Apr 21, 2030 10:45 UTC   8y              no
-        ```  
+        ```
+    *  Update kube config
+       ```bash 
+       cd ~/.kube
+       mv config conf.bak
+       cp /etc/kubernetes/admin.conf config
+       sudo chown $(id -u):$(id -g) config
+       ```
 
 5. Detach a node out from cluster
     * On control-panel
