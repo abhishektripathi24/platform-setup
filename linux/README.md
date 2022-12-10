@@ -130,16 +130,16 @@ From the official docs -
 6. SSH tunnels and port forwarding -
     ```bash
     # Local SSH Port Forwarding
-    ssh -v -N -i .ssh/riv_devops.pem -L 8080:10.8.77.122:9090 ec2-user@10.8.77.122
-    ssh -v -N -i .ssh/riv_devops.pem -L localhost:8080:10.8.77.122:9090 ec2-user@10.8.77.122
+    ssh -v -N -i .ssh/key.pem -L 8080:10.8.77.122:9090 ec2-user@10.8.77.122
+    ssh -v -N -i .ssh/key.pem -L localhost:8080:10.8.77.122:9090 ec2-user@10.8.77.122
     
     # Remote SSH Port Forwarding
-    ssh -v -N -i .ssh/riv_devops.pem -R 8080:localhost:8090 ec2-user@10.8.77.122 
-    ssh -v -N -i .ssh/riv_devops.pem -R 10.8.77.122:8080:localhost:8090 ec2-user@10.8.77.122
-    NOTE: set `GatewayPorts yes` in `/etc/ssh/sshd_config` to open the ports on 0.0.0.0 instead to 127.0.0.1
+    ssh -v -N -i .ssh/key.pem -R 8080:localhost:8090 ec2-user@10.8.77.122 
+    ssh -v -N -i .ssh/key.pem -R 10.8.77.122:8080:localhost:8090 ec2-user@10.8.77.122
+    NOTE: set `GatewayPorts yes` in `/etc/ssh/sshd_config` to open the ports on 0.0.0.0 instead to 127.0.0.1 and restart ssh service by `sudo systemctl restart ssh`
     
     # Dynamic SSH Port Forwarding (Socks Proxy)
-    ssh -i .ssh/riv_devops.pem -D 1080 -C -q -N -v ec2-user@10.8.77.122
+    ssh -i .ssh/key.pem -D 1080 -C -q -N -v ec2-user@10.8.77.122
     ```
 
 7. Login/Non-Login-Interactive/Non-Interactive shells
