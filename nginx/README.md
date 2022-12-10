@@ -192,8 +192,65 @@ Installation of `NGINX 1.14.0` on `Ubuntu 18.04.3 LTS` - [ref](https://www.nginx
     ```
     NOTE: This error occurs where the stream module is absent. Verify the installation/inclusin of stream module using command `nginx -V`. The output should contain `--with-stream=dynamic --with-stream_ssl_module`.
 
+## Monitoring
+* NGINX exposes several basic metrics about server activity on a simple status page, provided you have the HTTP stub status module enabled. To check if the module is already enabled, run following. The status module is enabled if you see `http_stub_status_module` as output in the terminal.
+    ```bash
+    nginx -V 2>&1 | grep -o http_stub_status_module
+    ```
+  
+* Put following configuration for exposing stats at `/etc/nginx/conf.d/stub_status_nginx.conf`:
+    ```bash
+    server {
+        listen 81; 
+        server_name localhost;
+        location /stub_status {
+            stub_status;
+        }
+    }
+    ```
+
+* Verify config
+    ```bash
+    sudo nginx -t
+    ```
+
+* Reload
+    ```bash
+    sudo nginx -s reload
+    ```
+
+* Verify output
+    ```bash
+    curl http://localhost:81/stub_status
+  
+    # Output
+    Active connections: 18
+    server accepts handled requests
+    3 3 44 
+    Reading: 0 Writing: 1 Waiting: 4
+    ```
+
+* Update `telegraf.conf` with following to expose metrics on prometheus
+    ```bash
+    [[inputs.nginx]]
+    #   # An array of Nginx stub_status URI to gather stats.
+    urls = ["http://localhost:81/stub_status"]
+    #
+    #   ## Optional TLS Config
+    #   tls_ca = "/etc/telegraf/ca.pem"
+    #   tls_cert = "/etc/telegraf/cert.cer"
+    #   tls_key = "/etc/telegraf/key.key"
+    #   ## Use TLS but skip chain & host verification
+    #   insecure_skip_verify = false
+    #
+    #   # HTTP response timeout (default: 5s)
+    response_timeout = "5s"
+    ```
+
 ## References
 * https://gist.github.com/soheilhy/8b94347ff8336d971ad0
 * https://linuxize.com/post/how-to-install-nginx-on-ubuntu-18-04/
 * https://www.nginx.com/blog/tcp-load-balancing-udp-load-balancing-nginx-tips-tricks/#upstream
 * https://medium.com/@web.development/high-performance-load-balancing-with-nginx-part-1-of-3-26e0e805bbcf
+* https://blog.opstree.com/2021/11/09/nginx-monitoring-using-telegraf-prometheus-grafana/
+* https://nginx.org/en/docs/http/ngx_http_stub_status_module.html#stub_status
